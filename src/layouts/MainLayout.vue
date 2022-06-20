@@ -3,10 +3,11 @@
     <q-header reveal elevated class="bg-primary text-white">
       <q-toolbar>
         <q-toolbar-title
-          class="text-center"
+          class="text-left"
           @click="$router.replace('/')"
           style="cursor: pointer"
         >
+          <!-- padding-left: 123.63px" //sizeof Dark Mode element -->
           <q-avatar>
             <img
               src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg"
@@ -15,7 +16,7 @@
           </q-avatar>
           Game Role Attendant
         </q-toolbar-title>
-        <q-toggle v-model="value" label="Dark Mode" />
+        <q-toggle v-model="value" color="dark" label="Dark Mode" />
       </q-toolbar>
     </q-header>
 
