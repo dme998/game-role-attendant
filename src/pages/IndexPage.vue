@@ -1,7 +1,7 @@
 <template>
   <q-page class="flex flex-center">
     <div class="column">
-      <q-btn color="primary" label="HOST" size="xl" />
+      <q-btn to="/host" color="primary" label="HOST" size="xl" />
       <div class="flex-break q-py-md"></div>
       <div class="text-center" style="font-size: xxx-large">OR</div>
       <div class="flex-break q-py-md"></div>
