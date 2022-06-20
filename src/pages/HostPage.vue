@@ -12,7 +12,7 @@
           v-model="name"
           label="User Name"
           lazy-rules
-          :rules="[ val => val && val.length > 0 || 'Please type something']"
+          :rules="[ val => val && val.length > 0 || 'Please enter a username!']"
         />
 
         <q-select
@@ -31,7 +31,7 @@
           lazy-rules
           :rules="[
           val => val !== null && val !== '' || 'Please select amount of players',
-          val => val > 0 && val <= 12 || `Please select within ${minPlayer} ➡️ ${maxPlayer} players`
+          val => val >= 5 && val <= 10 || `Please select within ${minPlayer} ➡️ ${maxPlayer} players`
         ]"
         />
 
@@ -51,8 +51,8 @@ import { ref } from 'vue';
 import { useQuasar } from "quasar";
 
 const stringOptions = ['Secret Hitler',]
-const minPlayer = 2
-const maxPlayer = 12
+const minPlayer = 5
+const maxPlayer = 10
 
 export default defineComponent({
   name: "HostPage",
