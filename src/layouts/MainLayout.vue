@@ -2,7 +2,11 @@
   <q-layout view="lHr lpR lfr">
     <q-header reveal elevated class="bg-primary text-white">
       <q-toolbar>
-        <q-toolbar-title class="text-center" @click= "$router.replace('/')" style="cursor: pointer">
+        <q-toolbar-title
+          class="text-center"
+          @click="$router.replace('/')"
+          style="cursor: pointer"
+        >
           <q-avatar>
             <img
               src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg"
@@ -11,11 +15,8 @@
           </q-avatar>
           Game Role Attendant
         </q-toolbar-title>
-            <q-toggle
-                v-model="value"
-                label="Dark Mode"
-                />
-        </q-toolbar>
+        <q-toggle v-model="value" label="Dark Mode" />
+      </q-toolbar>
     </q-header>
 
     <q-page-container>
@@ -25,7 +26,7 @@
 </template>
 
 <script>
-import { defineComponent, ref} from "vue";
+import { defineComponent, ref } from "vue";
 import { watch } from "vue";
 import { useQuasar } from "quasar";
 
@@ -34,13 +35,19 @@ export default defineComponent({
   setup() {
     const $q = useQuasar();
 
+    let value = ref(true);
+
+    $q.dark.set(value.value);
+
     watch(
-      () => $q.dark.isActive,
+      () => value.value,
       (val) => {
-        console.log(val ? "On dark mode" : "On light mode");
+        $q.dark.set(val);
       }
     );
-    return{value: ref(true)}
+    return {
+      value,
+    };
   },
 });
 </script>

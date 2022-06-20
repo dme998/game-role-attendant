@@ -1,14 +1,13 @@
 # Game Role Attendant
-This webpage is intented to assist with role-based and hidden identity games.
+
+This webpage is intended to assist with role-based and hidden identity games.
 Each player can connect to the host and receive personalized role information for the game.
 
 ## Technologies Utilized
 
 | Frontend                                          | Backend                           | Database                            |
-|---------------------------------------------------|-----------------------------------|-------------------------------------|
+| ------------------------------------------------- | --------------------------------- | ----------------------------------- |
 | [Quasar Framework w/ Vue.js](https://quasar.dev/) | [Node.js](https://nodejs.org/en/) | [MongoDB](https://www.mongodb.com/) |
-
-
 
 ## Development Setup
 
@@ -52,8 +51,8 @@ quasar build
 
 See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
 
-
 ## Credits
+
 - Authors: [Daniel Eggers](https://github.com/dme998/), [David Chandler](https://github.com/Tut-k0)
 - Project Start Date: 05/30/2022
 - Resources: [Quasar Documentation](https://quasar.dev/api-explorer)
