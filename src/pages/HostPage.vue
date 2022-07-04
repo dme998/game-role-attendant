@@ -30,7 +30,7 @@
             (val) =>
               (val !== null && val !== '') || 'Please select amount of players',
             (val) =>
-              (val >= 5 && val <= 10) ||
+              (val >= minPlayer && val <= maxPlayer) ||
               `Please select within ${minPlayer} ➡️ ${maxPlayer} players`,
           ]"
         />
