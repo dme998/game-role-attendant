@@ -67,13 +67,11 @@ export default defineComponent({
 
     const name = ref(null);
     const playerNum = ref(null);
-    const accept = ref(false);
     const options = ref(stringOptions);
 
     return {
       name,
       playerNum,
-      accept,
       model: ref("Secret Hitler"),
       stringOptions,
       options,
@@ -81,27 +79,17 @@ export default defineComponent({
       maxPlayer,
 
       onSubmit() {
-        if (accept.value !== true) {
-          $q.notify({
-            color: "red-5",
-            textColor: "white",
-            icon: "warning",
-            message: "You need to accept the license and terms first",
-          });
-        } else {
           $q.notify({
             color: "green-4",
             textColor: "white",
             icon: "cloud_done",
-            message: "Submitted",
-          });
-        }
-      },
+            message: "Room created",
+          })
+        },
 
       onReset() {
         name.value = null;
         playerNum.value = null;
-        accept.value = false;
       },
     };
   },
