@@ -60,7 +60,7 @@ export default {
           textColor: "white",
           icon: "cloud_done",
           message: "Room joined",
-        })
+        });
       },
 
       onReset() {
@@ -69,5 +69,5 @@ export default {
       },
     };
   },
-}
+};
 </script>

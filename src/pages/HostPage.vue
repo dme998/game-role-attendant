@@ -79,13 +79,13 @@ export default defineComponent({
       maxPlayer,
 
       onSubmit() {
-          $q.notify({
-            color: "green-4",
-            textColor: "white",
-            icon: "cloud_done",
-            message: "Room created",
-          })
-        },
+        $q.notify({
+          color: "green-4",
+          textColor: "white",
+          icon: "cloud_done",
+          message: "Room created",
+        });
+      },
 
       onReset() {
         name.value = null;
