@@ -12,26 +12,13 @@
           ]"
         />
 
-        <q-select
-          filled
-          v-model="model"
-          label="Ruleset"
-          :options="stringOptions"
-          behavior="menu"
-        />
-
         <q-input
           filled
-          type="number"
-          v-model="playerNum"
-          label="Number of players"
+          v-model="room"
+          label="Room Code"
           lazy-rules
           :rules="[
-            (val) =>
-              (val !== null && val !== '') || 'Please select amount of players',
-            (val) =>
-              (val >= minPlayer && val <= maxPlayer) ||
-              `Please select within ${minPlayer} ➡️ ${maxPlayer} players`,
+            (val) => (val && val.length > 0) || 'Please enter a room code!',
           ]"
         />
 
@@ -51,47 +38,36 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
 import { ref } from "vue";
 import { useQuasar } from "quasar";
 
-const stringOptions = ["Secret Hitler"];
-const minPlayer = 5;
-const maxPlayer = 10;
-
-export default defineComponent({
-  name: "HostPage",
+export default {
+  name: "JoinPage",
 
   setup() {
     const $q = useQuasar();
 
     const name = ref(null);
-    const playerNum = ref(null);
-    const options = ref(stringOptions);
+    const room = ref(null);
 
     return {
       name,
-      playerNum,
-      model: ref("Secret Hitler"),
-      stringOptions,
-      options,
-      minPlayer,
-      maxPlayer,
+      room,
 
       onSubmit() {
         $q.notify({
           color: "green-4",
           textColor: "white",
           icon: "cloud_done",
-          message: "Room created",
+          message: "Room joined",
         });
       },
 
       onReset() {
         name.value = null;
-        playerNum.value = null;
+        room.value = null;
       },
     };
   },
-});
+};
 </script>

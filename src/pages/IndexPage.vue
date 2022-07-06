@@ -5,7 +5,7 @@
       <div class="flex-break q-py-md"></div>
       <div class="text-center" style="font-size: xxx-large">OR</div>
       <div class="flex-break q-py-md"></div>
-      <q-btn color="secondary" label="JOIN" size="xl" />
+      <q-btn to="/join" color="secondary" label="JOIN" size="xl" />
       <div class="flex-break q-py-lg"></div>
     </div>
   </q-page>
