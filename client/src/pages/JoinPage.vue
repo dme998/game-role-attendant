@@ -9,6 +9,7 @@
           lazy-rules
           :rules="[
             (val) => (val && val.length > 0) || 'Please enter a username!',
+			(val) => { name = val.replace(/[^a-zA-Z0-9]/g,'_').slice(0,12) },
           ]"
         />
 
@@ -19,6 +20,7 @@
           lazy-rules
           :rules="[
             (val) => (val && val.length > 0) || 'Please enter a room code!',
+		    (val) => (val && val.length <= 4) || 'Invalid room code',
           ]"
         />
 
