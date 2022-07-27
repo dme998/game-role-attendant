@@ -1,0 +1,18 @@
+{
+  "name": "game-role-attendent-server",
+  "version": "0.1",
+  "description": "This webpage is intended to assist with role-based and hidden identity games. Each player can connect to the host and receive personalized role information for the game.",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "dme_998, Tut-k0",
+  "license": "GNU General Public License v3.0",
+  "dependencies": {
+    "express": "^4.18.1",
+    "redis-om": "^0.3.6",
+    "socket.io": "^4.5.1"
+  }
+}
