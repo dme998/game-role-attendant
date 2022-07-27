@@ -7,15 +7,6 @@ docker run -p 6379:6379 -d redislabs/redismod:preview
 
 # Run server.js
 npm start
-
-# Kill the container when finished.
-
-# List processes, use -a after ps to list non running containers.
-docker ps  
-
-# Use container id 
-docker stop <container_id>
-docker rm <container_id>  # If error use docker rm <container_id> -f
 ```
 
 ## Example requests
@@ -44,4 +35,15 @@ Invoke-WebRequest -URI http://localhost:3000/room/player/01G90FH9Y93BJ95K84XB2KW
 
 # Fetch room info:
 Invoke-WebRequest -URI http://localhost:3000/room/01G90FH9Y8MQE17WGCX1WGKDYW -Method GET
+```
+
+## Teardown
+```bash
+# Kill the Redis container when finished.
+# List processes, use -a after ps to list non running containers.
+docker ps  
+
+# Use container id 
+docker stop <container_id>
+docker rm <container_id>  # If error use docker rm <container_id> -f
 ```
