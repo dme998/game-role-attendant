@@ -8,3 +8,7 @@ export function makeRoomCode() {
     }
     return result
 }
+
+export function normalizeUsername(username) {
+	return username.replace(/[^a-zA-Z0-9]/g, '_').slice(0, 12);
+}
