@@ -30,7 +30,7 @@ router.put('/', async (req, res) => {  // room
 	
 	/* check user input and match to ruleset
 	** if no user input exists, default to first index in ruleset */
-	for(i = 0; i < RULESETS.length; i++) {
+	for(let i = 0; i < RULESETS.length; i++) {
 		if (req.body.ruleset === RULESETS[i]) {
 			room.ruleset = req.body.ruleset ?? null;
 		}
