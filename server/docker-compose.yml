@@ -1,0 +1,29 @@
+version: "3.7"
+services:
+
+  node:
+    container_name: game-role-attendant-app
+    image: game-role-attendant
+    build:
+      context: .
+      args:
+        buildversion: 0.1
+
+    ports:
+      - "3000:3000"
+    networks:
+      - game-role-attendant-network
+    volumes:
+      - ./logs:/var/www/logs
+    depends_on:
+      - redis
+
+  redis:
+    container_name: redis-db
+    image: redis
+    networks:
+      - game-role-attendant-network
+
+networks:
+  game-role-attendant-network:
+    driver: bridge

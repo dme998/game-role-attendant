@@ -5,54 +5,16 @@ Each player can connect to the host and receive personalized role information fo
 
 ## Technologies Utilized
 
-| Frontend                                          | Backend                           | Database                            |
-| ------------------------------------------------- | --------------------------------- | ----------------------------------- |
-| [Quasar Framework w/ Vue.js](https://quasar.dev/) | [Node.js](https://nodejs.org/en/) | [MongoDB](https://www.mongodb.com/) |
+| Frontend                                          | Backend                           | Database                   |
+|---------------------------------------------------|-----------------------------------|----------------------------|
+| [Quasar Framework w/ Vue.js](https://quasar.dev/) | [Node.js](https://nodejs.org/en/) | [Redis](https://redis.io/) |
 
 ## Development Setup
-
-### Install the dependencies
-
-```bash
-yarn
-# or
-npm install
-```
-
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
-
-```bash
-quasar dev
-```
-
-### Lint the files
-
-```bash
-yarn lint
-# or
-npm run lint
-```
-
-### Format the files
-
-```bash
-yarn format
-# or
-npm run format
-```
-
-### Build the app for production
-
-```bash
-quasar build
-```
-
-### Customize the configuration
-
-See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
+To set up the front end, please read the README in the client directory. 
+To set up the back end please read the README in the server directory.
 
 ## Credits
 
 - Authors: [Daniel Eggers](https://github.com/dme998/), [David Chandler](https://github.com/Tut-k0)
 - Project Start Date: 05/30/2022
-- Resources: [Quasar Documentation](https://quasar.dev/api-explorer)
+- Resources: [Quasar Documentation](https://quasar.dev/api-explorer), [Node Documentation](https://nodejs.org/dist/latest-v16.x/docs/api/), [Socket.io Documentation](https://socket.io/docs/v3/), [Redis Documentation](https://developer.redis.com)
