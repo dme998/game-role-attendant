@@ -1,12 +1,21 @@
 # Backend Initialization
 
 Directions listed here assume you are in the server folder directory.
+### Half Docker
 ```bash
 # Get and start a redis backend
 docker run -p 6379:6379 -d redislabs/redismod:preview
 
 # Run server.js
 npm start
+```
+### Full Docker w/ Compose
+```bash
+# Start containers detached
+docker-compose up -d
+
+# Stop containers
+docker-compose down
 ```
 
 ## Example requests

@@ -9,7 +9,8 @@ const playerSchema = new Schema(Player, {
     dateJoined: {type: 'date'},
 });
 
-const client = await new Client().open();
+const client = await new Client()
+await client.open(process.env.REDIS_URL)
 
 export const playerRepository = client.fetchRepository(playerSchema);
 
