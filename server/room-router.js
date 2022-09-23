@@ -51,13 +51,42 @@ router.put('/', async (req, res) => {  // room
     const playerId = await playerRepository.save(player)
 	await playerRepository.expire(playerId, MAX_TTL)
 
-    res.send({roomId, playerId});  //debug
+    return res.send({roomId, playerId});  //debug
 	
 	/* potential:
 		const players = await playerRepository.search().where('roomId').equals(roomId).all()
     	res.send({roomCode, players}); 
 	*/
 
+});
+
+router.put('/join', async (req, res) => {
+	//TODO: Sanitize user input.
+	const room = await roomRepository.search().where('roomName').equals(req.body.roomCode).first();
+	if (!room) {
+		console.log(room)
+		console.log('it is null. sending 404')
+		res.status(404);
+		return res.send("Room not found!")
+	}
+
+	//TODO: Make sure username is not taken.
+	//const existingPlayers = await playerRepository.search().where('roomId').equals(room.entityId).all();
+
+	let player = playerRepository.createEntity();
+	player.roomId = room.entityId ?? null;
+	player.userName = normalizeUsername(req.body.userName) ?? null; // Replace with value from checked users.
+	player.isHost = false;
+	player.dateJoined = new Date() ?? null;
+	const playerId = await playerRepository.save(player);
+	await playerRepository.expire(playerId, MAX_TTL);
+
+	const players = await playerRepository.search()
+		.where('roomId')
+		.equals(room.entityId)
+		.sortBy('dateJoined', 'ASC')
+		.all();
+	return res.send({players})
 });
 
 router.get('/:id', async (req, res) => {
