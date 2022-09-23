@@ -3,11 +3,11 @@ services:
 
   node:
     container_name: game-role-attendant-app
-    image: game-role-attendant
+    image: tutk0/game-role-attendant:latest
     build:
       context: .
       args:
-        buildversion: 0.1
+        buildversion: 0.2
 
     ports:
       - "3000:3000"
@@ -17,12 +17,16 @@ services:
       - ./logs:/var/www/logs
     depends_on:
       - redis
+    environment:
+      - REDIS_URL=redis://redis:6379
 
   redis:
     container_name: redis-db
-    image: redis
+    image: redislabs/redismod:latest
     networks:
       - game-role-attendant-network
+    ports:
+      - "6379:6379"
 
 networks:
   game-role-attendant-network:

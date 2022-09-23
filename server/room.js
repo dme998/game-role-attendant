@@ -9,7 +9,8 @@ const roomSchema = new Schema(Room, {
 	dateEnd: {type: 'date'},
 });
 
-const client = await new Client().open();
+const client = await new Client()
+await client.open(process.env.REDIS_URL)
 
 export const roomRepository = client.fetchRepository(roomSchema);
 
