@@ -1,10 +1,10 @@
 import { Router } from "express";
 import { roomRepository } from "./room.js";
 import { playerRepository } from "./player.js";
-import { makeRoomCode, normalizeUsername } from "./utils.js";
+import { makeRoomCode, normalizeUsername, getTTLDate } from "./utils.js";
 
 export const router = Router()
-const MAX_TTL = 21600; // expiration time to live to be used by generated objects 
+const MAX_TTL = 21600; // expiration time to live to be used by generated objects in seconds.
 const RULESETS = ["Secret Hitler", "Undefined Ruleset"];
 
 router.put('/', async (req, res) => {  // room
@@ -26,7 +26,7 @@ router.put('/', async (req, res) => {  // room
 		}
 		counter++;
 	}
-
+	room.roomName = roomCode ?? null;
 	
 	/* check user input and match to ruleset
 	** if no user input exists, default to first index in ruleset */
@@ -40,14 +40,16 @@ router.put('/', async (req, res) => {  // room
 	}
 	
 	room.dateCreated = new Date() ?? null;
-	//TODO room.dateExpire
-	const roomId = await roomRepository.save(room);  //async 
+	room.dateEnd = getTTLDate(room.dateCreated, MAX_TTL) ?? null;
+	const roomId = await roomRepository.save(room);  //async
+	await roomRepository.expire(roomId, MAX_TTL)
 
     player.roomId = roomId ?? null;
     player.userName = normalizeUsername(req.body.userName) ?? null;
     player.isHost = true;
     player.dateJoined = new Date() ?? null;
     const playerId = await playerRepository.save(player)
+	await playerRepository.expire(playerId, MAX_TTL)
 
     res.send({roomId, playerId});  //debug
 	
