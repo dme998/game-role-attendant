@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { roomRepository } from "./room.js";
 import { playerRepository } from "./player.js";
-import { makeRoomCode, normalizeUsername, getTTLDate } from "./utils.js";
+import { makeRoomCode, normalizeUsername, validateRoomCode, getTTLDate } from "./utils.js";
 
 export const router = Router()
 const MAX_TTL = 21600; // expiration time to live to be used by generated objects in seconds.
@@ -61,21 +61,27 @@ router.put('/', async (req, res) => {  // room
 });
 
 router.put('/join', async (req, res) => {
-	//TODO: Sanitize user input.
-	const room = await roomRepository.search().where('roomName').equals(req.body.roomCode).first();
+	const roomCode = validateRoomCode(req.body.roomCode)
+	const room = await roomRepository.search().where('roomName').equals(roomCode).first();
 	if (!room) {
-		console.log(room)
-		console.log('it is null. sending 404')
 		res.status(404);
 		return res.send("Room not found!")
 	}
 
-	//TODO: Make sure username is not taken.
-	//const existingPlayers = await playerRepository.search().where('roomId').equals(room.entityId).all();
+	const userName = normalizeUsername(req.body.userName);
+	const playerQuery = await playerRepository.search().where('roomId').equals(room.entityId).all();
+	let existingPlayers = []
+	playerQuery.forEach((p) => {
+		existingPlayers.push(p.entityFields.userName._value.toLowerCase());
+	});
+	if (existingPlayers.includes(userName.toLowerCase())) {
+		res.status(409);
+		return res.send("Username is already taken!")
+	}
 
 	let player = playerRepository.createEntity();
 	player.roomId = room.entityId ?? null;
-	player.userName = normalizeUsername(req.body.userName) ?? null; // Replace with value from checked users.
+	player.userName = userName ?? null;
 	player.isHost = false;
 	player.dateJoined = new Date() ?? null;
 	const playerId = await playerRepository.save(player);
