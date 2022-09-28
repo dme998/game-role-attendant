@@ -1,12 +1,12 @@
-const roomCodeCharSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-const roomCodeLength = 4;
+const ROOM_CODE_CHAR_SET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+const ROOM_CODE_LENGTH = 4;
 
 export function makeRoomCode() {
     let result = '';
-    const charsLength = roomCodeCharSet.length;
+    const charsLength = ROOM_CODE_CHAR_SET.length;
 
-    for (let i = 0; i < roomCodeLength; i++) {
-        result += roomCodeCharSet.charAt(Math.floor(Math.random() * charsLength));
+    for (let i = 0; i < ROOM_CODE_LENGTH; i++) {
+        result += ROOM_CODE_CHAR_SET.charAt(Math.floor(Math.random() * charsLength));
     }
     return result
 }
@@ -19,12 +19,12 @@ export function validateRoomCode(roomCode) {
     if (!roomCode) {
         return false;
     }
-    if (roomCode.length !== roomCodeLength) {
+    if (roomCode.length !== ROOM_CODE_LENGTH) {
         return false;
     }
     const upperRoomCode = roomCode.toUpperCase();
     for (let c of upperRoomCode) {
-        if (![...roomCodeCharSet].includes(c)) {
+        if (![...ROOM_CODE_CHAR_SET].includes(c)) {
             return false;
         }
     }
