@@ -60,6 +60,7 @@ router.put('/', async (req, res) => {  // room
 
 });
 
+/* join endpoint */
 router.put('/join', async (req, res) => {
 	const roomCode = validateRoomCode(req.body.roomCode)
 	const room = await roomRepository.search().where('roomName').equals(roomCode).first();
@@ -67,7 +68,8 @@ router.put('/join', async (req, res) => {
 		res.status(404);
 		return res.send("Room not found!")
 	}
-
+	
+	/* Check if duplicate username exists and send error if so */
 	const userName = normalizeUsername(req.body.userName);
 	const playerQuery = await playerRepository.search().where('roomId').equals(room.entityId).all();
 	let existingPlayers = []

@@ -1,10 +1,12 @@
+const roomCodeCharSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+const roomCodeLength = 4;
+
 export function makeRoomCode() {
     let result = '';
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    const charsLength = chars.length
+    const charsLength = roomCodeCharSet.length;
 
-    for (let i = 0; i < 4; i++) {
-        result += chars.charAt(Math.floor(Math.random() * charsLength));
+    for (let i = 0; i < roomCodeLength; i++) {
+        result += roomCodeCharSet.charAt(Math.floor(Math.random() * charsLength));
     }
     return result
 }
@@ -14,17 +16,15 @@ export function normalizeUsername(username) {
 }
 
 export function validateRoomCode(roomCode) {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-
     if (!roomCode) {
         return false;
     }
-    if (roomCode.length !== 4) {
+    if (roomCode.length !== roomCodeLength) {
         return false;
     }
     const upperRoomCode = roomCode.toUpperCase();
     for (let c of upperRoomCode) {
-        if (![...chars].includes(c)) {
+        if (![...roomCodeCharSet].includes(c)) {
             return false;
         }
     }
@@ -34,6 +34,6 @@ export function validateRoomCode(roomCode) {
 
 export function getTTLDate(currentDate, ttlInSeconds) {
     const currentTime = currentDate.getTime();
-    const addedTime = currentTime + (ttlInSeconds * 1000);
+    const addedTime = currentTime + (ttlInSeconds * 1000);  //1000 means ms conversion
     return new Date(addedTime);
 }
