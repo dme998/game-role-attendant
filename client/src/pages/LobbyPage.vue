@@ -5,7 +5,7 @@
         <q-list bordered padding id="player-list">
           <q-item>
             <q-item-section>
-              <q-item-label overline>ROOM CODE: A8ZV5</q-item-label>
+              <q-item-label overline>{{ `ROOM CODE: ${this.$route.params.roomCode}`  }}</q-item-label>
               <q-item-label></q-item-label>
             </q-item-section>
           </q-item>
@@ -57,6 +57,7 @@
 
 <script>
 import { useQuasar } from "quasar";
+import { api } from "boot/axios"
 
 export default {
   name: "LobbyPage",
@@ -87,39 +88,20 @@ export default {
 
   data() {
     return {
-      players: {
-        player1: {
-          id: 0,
-          userName: "Tut_k0",
-          isHost: true,
-        },
-        player2: {
-          id: 1,
-          userName: "dme_998",
-          isHost: false,
-        },
-        player3: {
-          id: 2,
-          userName: "Drizz",
-          isHost: false,
-        },
-        player4: {
-          id: 3,
-          userName: "Finne",
-          isHost: false,
-        },
-        player5: {
-          id: 4,
-          userName: "Scav From Tarkov",
-          isHost: false,
-        },
-        player6: {
-          id: 5,
-          userName: "Turtle",
-          isHost: false,
-        },
-      },
-    };
+      players: []
+    }
   },
+
+ mounted() {
+   this.fetchRoomData();
+ },
+
+ methods: {
+   fetchRoomData() {
+     api.get('/room/' + this.$route.params.roomCode)
+       .then(res => this.players = res.data)
+       .catch(e => console.log(e))
+   },
+ },
 };
 </script>

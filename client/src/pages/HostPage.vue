@@ -1,7 +1,7 @@
 <template>
   <q-page class="flex flex-center">
     <div class="q-pa-md">
-      <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
+      <q-form @submit="onSubmit(name, model)" @reset="onReset" class="q-gutter-md">
         <q-input
           filled
           v-model="name"
@@ -56,6 +56,7 @@
 <script>
 import { defineComponent } from "vue";
 import { ref } from "vue";
+import { api } from "boot/axios"
 import { useQuasar } from "quasar";
 
 const stringOptions = ["Secret Hitler"];
@@ -71,24 +72,16 @@ export default defineComponent({
     const name = ref(null);
     const playerNum = ref(null);
     const options = ref(stringOptions);
+    const model = ref("Secret Hitler")
 
     return {
       name,
       playerNum,
-      model: ref("Secret Hitler"),
+      model,
       stringOptions,
       options,
       minPlayer,
       maxPlayer,
-
-      onSubmit() {
-        $q.notify({
-          color: "green-4",
-          textColor: "white",
-          icon: "cloud_done",
-          message: "Room created",
-        });
-      },
 
       onReset() {
         name.value = null;
@@ -96,5 +89,33 @@ export default defineComponent({
       },
     };
   },
+  methods: {
+    onSubmit(userName, ruleset) {
+      api.put('/room', {
+        userName: userName,
+        ruleset: ruleset,
+        isHost: true
+      })
+        .then((res) => {
+          console.log(res)
+          this.$router.push(`/lobby/${res.data.roomCode}`)
+          this.$q.notify({
+            color: "green-4",
+            textColor: "white",
+            icon: "cloud_done",
+            message: `Room ${res.data.roomCode} created`,
+          });
+        })
+        .catch((e) => {
+          this.$q.notify({
+            color: "negative",
+            textColor: "white",
+            icon: "report_problem",
+            message: "Request failed.",
+          });
+          console.log(e)
+        })
+    },
+  }
 });
 </script>

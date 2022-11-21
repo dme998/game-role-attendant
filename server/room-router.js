@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { io } from "./server.js"
 import { roomRepository } from "./room.js";
 import { playerRepository } from "./player.js";
 import { makeRoomCode, normalizeUsername, validateRoomCode, getTTLDate } from "./utils.js";
@@ -51,12 +52,10 @@ router.put('/', async (req, res) => {  // room
     const playerId = await playerRepository.save(player)
 	await playerRepository.expire(playerId, MAX_TTL)
 
-    return res.send({roomId, playerId});  //debug
-	
-	/* potential:
-		const players = await playerRepository.search().where('roomId').equals(roomId).all()
-    	res.send({roomCode, players}); 
-	*/
+    // return res.send({roomId, playerId});  //debug
+
+	// const players = await playerRepository.search().where('roomId').equals(roomId).sortBy('dateJoined').all()
+	return res.send({roomCode});
 
 });
 
@@ -98,13 +97,14 @@ router.put('/join', async (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
-    let room = await roomRepository.fetch(req.params.id);
+	let room = await roomRepository.search().where('roomName').equals(req.params.id).first();
+	let players = await playerRepository.search().where('roomId').equals(room.entityId).sortBy('dateJoined', 'ASC').all();
 
-    res.send(room);
+    return res.send(players);
 });
 
 router.get('/player/:id', async (req, res) => {
     let player = await playerRepository.fetch(req.params.id);
 
-    res.send(player);
+    return res.send(player);
 });

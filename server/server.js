@@ -1,14 +1,19 @@
 import express from 'express';
 import http from 'http';
-import { Server } from 'socket.io'
+import { Server } from 'socket.io';
+import cors from 'cors';
 import { router as roomRouter } from "./room-router.js";
 
 let app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+export const io = new Server(server);
 
 app.use(express.json());
-app.use('/room', roomRouter)
+// TODO: Lock this down later.
+app.use(cors({
+    origin: '*'
+}));
+app.use('/room', roomRouter);
 
 app.get('/', (req, res) => {
     res.send({
