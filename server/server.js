@@ -6,7 +6,16 @@ import { router as roomRouter } from "./room-router.js";
 
 let app = express();
 const server = http.createServer(app);
-export const io = new Server(server);
+const io = new Server(server, {
+    // TODO: Lock this down later.
+    cors: {
+        origin: '*'
+    }
+});
+io.use((socket, next) => {
+    const token = socket.handshake.auth.token;
+});
+export { io }
 
 app.use(express.json());
 // TODO: Lock this down later.

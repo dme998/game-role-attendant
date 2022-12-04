@@ -57,6 +57,7 @@
 import { defineComponent } from "vue";
 import { ref } from "vue";
 import { api } from "boot/axios"
+import { socketIo } from "boot/socket.io";
 import { useQuasar } from "quasar";
 
 const stringOptions = ["Secret Hitler"];
@@ -97,10 +98,9 @@ export default defineComponent({
         isHost: true
       })
         .then((res) => {
-          console.log(res)
           this.$router.push(`/lobby/${res.data.roomCode}`)
           this.$q.notify({
-            color: "green-4",
+            color: "positive",
             textColor: "white",
             icon: "cloud_done",
             message: `Room ${res.data.roomCode} created`,

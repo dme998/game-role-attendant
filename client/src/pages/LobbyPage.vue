@@ -58,6 +58,7 @@
 <script>
 import { useQuasar } from "quasar";
 import { api } from "boot/axios"
+import { socketIo } from "boot/socket.io"
 
 export default {
   name: "LobbyPage",
@@ -68,18 +69,18 @@ export default {
     return {
       onSubmit() {
         $q.notify({
-          color: "green-4",
+          type: "positive",
+          color: "positive",
           textColor: "white",
-          icon: "cloud_done",
           message: "Submitted!",
         });
       },
 
       onAbort() {
         $q.notify({
-          color: "red-5",
-          textColor: "white",
           type: "negative",
+          color: "negative",
+          textColor: "white",
           message: "Aborted!",
         });
       },
@@ -98,6 +99,7 @@ export default {
 
  methods: {
    fetchRoomData() {
+     socketIo.connect();
      api.get('/room/' + this.$route.params.roomCode)
        .then(res => this.players = res.data)
        .catch(e => console.log(e))

@@ -97,6 +97,9 @@ router.put('/join', async (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
+	io.on("connection", (socket) => {
+		console.log(socket);
+	});
 	let room = await roomRepository.search().where('roomName').equals(req.params.id).first();
 	let players = await playerRepository.search().where('roomId').equals(room.entityId).sortBy('dateJoined', 'ASC').all();
 
