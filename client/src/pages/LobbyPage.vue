@@ -76,15 +76,6 @@ export default {
           message: "Submitted!",
         });
       },
-
-      onAbort() {
-        $q.notify({
-          type: "negative",
-          color: "negative",
-          textColor: "white",
-          message: "Aborted!",
-        });
-      },
     };
   },
 
@@ -106,6 +97,16 @@ export default {
       socketIo.on("send-data", (lobbyData) => {
         console.log(lobbyData);
         this.players = lobbyData;
+      });
+    },
+    onAbort() {
+      socketIo.disconnect();
+      this.$router.push(`/`);
+      this.$q.notify({
+        type: "negative",
+        color: "negative",
+        textColor: "white",
+        message: `Left room ${this.$route.params.roomCode}`,
       });
     },
   },
