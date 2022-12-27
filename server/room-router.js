@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { io } from "./server.js"
 import { roomRepository } from "./room.js";
 import { playerRepository } from "./player.js";
 import { makeRoomCode, normalizeUsername, validateRoomCode, getTTLDate } from "./utils.js";
@@ -45,8 +44,9 @@ router.put('/', async (req, res) => {  // room
 	const roomId = await roomRepository.save(room);  //async
 	await roomRepository.expire(roomId, MAX_TTL)
 
+	const userName = normalizeUsername(req.body.userName)
     player.roomId = roomId ?? null;
-    player.userName = normalizeUsername(req.body.userName) ?? null;
+    player.userName = userName ?? null;
     player.isHost = true;
     player.dateJoined = new Date() ?? null;
     const playerId = await playerRepository.save(player)
@@ -55,7 +55,7 @@ router.put('/', async (req, res) => {  // room
     // return res.send({roomId, playerId});  //debug
 
 	// const players = await playerRepository.search().where('roomId').equals(roomId).sortBy('dateJoined').all()
-	return res.send({roomCode});
+	return res.send({roomCode, userName, playerId});
 
 });
 
@@ -88,22 +88,13 @@ router.put('/join', async (req, res) => {
 	const playerId = await playerRepository.save(player);
 	await playerRepository.expire(playerId, MAX_TTL);
 
-	const players = await playerRepository.search()
-		.where('roomId')
-		.equals(room.entityId)
-		.sortBy('dateJoined', 'ASC')
-		.all();
-	return res.send({players})
+	return res.send({roomCode, userName, playerId})
 });
 
 router.get('/:id', async (req, res) => {
-	io.on("connection", (socket) => {
-		console.log(socket);
-	});
 	let room = await roomRepository.search().where('roomName').equals(req.params.id).first();
 	let players = await playerRepository.search().where('roomId').equals(room.entityId).sortBy('dateJoined', 'ASC').all();
-
-    return res.send(players);
+    return res.status(200);
 });
 
 router.get('/player/:id', async (req, res) => {

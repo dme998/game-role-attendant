@@ -5,7 +5,9 @@
         <q-list bordered padding id="player-list">
           <q-item>
             <q-item-section>
-              <q-item-label overline>{{ `ROOM CODE: ${this.$route.params.roomCode}`  }}</q-item-label>
+              <q-item-label overline>{{
+                `ROOM CODE: ${this.$route.params.roomCode}`
+              }}</q-item-label>
               <q-item-label></q-item-label>
             </q-item-section>
           </q-item>
@@ -57,8 +59,7 @@
 
 <script>
 import { useQuasar } from "quasar";
-import { api } from "boot/axios"
-import { socketIo } from "boot/socket.io"
+import { socketIo } from "boot/socket.io";
 
 export default {
   name: "LobbyPage",
@@ -89,21 +90,24 @@ export default {
 
   data() {
     return {
-      players: []
-    }
+      players: [],
+    };
   },
 
- mounted() {
-   this.fetchRoomData();
- },
+  mounted() {
+    this.fetchRoomData();
+  },
 
- methods: {
-   fetchRoomData() {
-     socketIo.connect();
-     api.get('/room/' + this.$route.params.roomCode)
-       .then(res => this.players = res.data)
-       .catch(e => console.log(e))
-   },
- },
+  methods: {
+    fetchRoomData() {
+      const playerId = localStorage.getItem("playerId");
+      socketIo.auth = { playerId };
+      socketIo.connect();
+      socketIo.on("send-data", (lobbyData) => {
+        console.log(lobbyData);
+        this.players = lobbyData;
+      });
+    },
+  },
 };
 </script>
