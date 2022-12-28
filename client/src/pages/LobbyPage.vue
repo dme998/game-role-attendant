@@ -60,24 +60,10 @@
 <script>
 import { useQuasar } from "quasar";
 import { socketIo } from "boot/socket.io";
+import { api } from "boot/axios";
 
 export default {
   name: "LobbyPage",
-
-  setup() {
-    const $q = useQuasar();
-
-    return {
-      onSubmit() {
-        $q.notify({
-          type: "positive",
-          color: "positive",
-          textColor: "white",
-          message: "Submitted!",
-        });
-      },
-    };
-  },
 
   data() {
     return {
@@ -98,6 +84,30 @@ export default {
         console.log(lobbyData);
         this.players = lobbyData;
       });
+    },
+    onSubmit() {
+      api
+        .put("/room/start", {
+          playerId: localStorage.getItem("playerId")
+        })
+        .then((res) => {
+          console.log(res)
+          this.$q.notify({
+            color: "positive",
+            textColor: "white",
+            icon: "cloud_done",
+            message: `Game is starting....`,
+          });
+        })
+        .catch((e) => {
+          this.$q.notify({
+            color: "negative",
+            textColor: "white",
+            icon: "report_problem",
+            message: "Request failed.",
+          });
+          console.log(e);
+        });
     },
     onAbort() {
       socketIo.disconnect();
