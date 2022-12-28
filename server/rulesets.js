@@ -87,6 +87,7 @@ export class SecretHitler {
 		
 		
 		// Update the message variable for each fascist so they know who their teammates are
+        // TODO: Fix this for 9 or more players, 3rd fascist has duplicated teammates in message.
 		let fascists = players.slice(1, 1 + rules.fascistCount)
         if (fascists.length > 1) {
             for(let i = 0; i < fascists.length; i++) {
