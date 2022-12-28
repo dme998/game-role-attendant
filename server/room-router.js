@@ -2,6 +2,7 @@ import { Router } from "express";
 import { roomRepository } from "./room.js";
 import { playerRepository } from "./player.js";
 import { makeRoomCode, normalizeUsername, validateRoomCode, getTTLDate } from "./utils.js";
+import { SecretHitler } from "./rulesets.js";
 
 export const router = Router()
 const MAX_TTL = 21600; // expiration time to live to be used by generated objects in seconds.
@@ -91,9 +92,11 @@ router.put('/join', async (req, res) => {
 	return res.send({roomCode, userName, playerId})
 });
 
-router.get('/:id', async (req, res) => {
-	let room = await roomRepository.search().where('roomName').equals(req.params.id).first();
-	let players = await playerRepository.search().where('roomId').equals(room.entityId).sortBy('dateJoined', 'ASC').all();
+router.put('/start', async (req, res) => {
+	let player = await playerRepository.fetch(req.body.playerId);
+	let players = await playerRepository.search().where('roomId').equals(player.roomId).all();
+	let data = new SecretHitler(players).setRolesForPlayers();
+	console.log(data)
     return res.status(200);
 });
 
