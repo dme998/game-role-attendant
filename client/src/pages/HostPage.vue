@@ -2,7 +2,7 @@
   <q-page class="flex flex-center">
     <div class="q-pa-md">
       <q-form
-        @submit="onSubmit(name, model)"
+        @submit="onSubmit(name, model, playerNum)"
         @reset="onReset"
         class="q-gutter-md"
       >
@@ -91,12 +91,12 @@ export default defineComponent({
     };
   },
   methods: {
-    onSubmit(userName, ruleset) {
+    onSubmit(userName, ruleset, playerNum) {
       api
         .put("/room", {
           userName: userName,
           ruleset: ruleset,
-          isHost: true,
+          playerCount: playerNum
         })
         .then((res) => {
           localStorage.setItem("playerId", res.data.playerId);

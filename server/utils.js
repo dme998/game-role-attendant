@@ -37,3 +37,13 @@ export function getTTLDate(currentDate, ttlInSeconds) {
     const addedTime = currentTime + (ttlInSeconds * 1000);  //1000 means ms conversion
     return new Date(addedTime);
 }
+
+export function choice(arr) {
+    return Math.floor(Math.random() * arr.length)
+}
+
+export function removeItem(arr, value) {
+    return arr.filter(function (element) {
+        return element !== value;
+    })
+}
