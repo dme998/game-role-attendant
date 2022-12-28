@@ -52,8 +52,8 @@ export class SecretHitler {
     setRolesForPlayers() {
         
 		// Copy players to push and pop freely.
-        let players = self.players;
-        const playerCount = self.players.length;
+        let players = [...this.players];
+        const playerCount = this.players.length;
         const rules = this.determineRoleCount(playerCount);
         let playerRoles = []
 		
