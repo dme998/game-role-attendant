@@ -67,8 +67,8 @@ class SecretHitler {
 		}
 		
 		for(let i = 1; i < rules.fascistCount; i++) {
-			playerRoles.push({[players[i].entityID]: "Facist", color: "negative", 
-							 message: `${players[i].userName}, your Secret Role is Facist. The identity of Hitler is ${players[0].userName}. `})
+			playerRoles.push({[players[i].entityID]: "fascist", color: "negative", 
+							 message: `${players[i].userName}, your Secret Role is fascist. The identity of Hitler is ${players[0].userName}. `})
 		}
 		
 		for(let i = 1 + rules.fascistCount; i < rules.liberalCount; i++) {
@@ -78,30 +78,30 @@ class SecretHitler {
 		
 		if (rules.fascistsKnownToHitler) {
         	playerRoles.push({[players[0].entityID]: "Hitler", color: "maroon", 
-							  message: `${players[0].userName}, your Secret Role is Hitler and your fellow Facist is ${players[1].userName}` })
+							  message: `${players[0].userName}, your Secret Role is Hitler and your fellow fascist is ${players[1].userName}` })
 			for(let i = 0; i < players.length; i++) {
 				
 			}
         }
 		else {
 			playerRoles.push({[players[0].entityID]: "Hitler", color: "maroon",
-							 message: `${players[0].userName}, your Secret Role is Hitler. Your fellow Facists: ` })
+							 message: `${players[0].userName}, your Secret Role is Hitler. Your fellow fascists: ` })
 		}
 		
 		
-		// Update the message variable for each facist so they know who their teammates are
-		let facists = players.slice(1, 1 + rules.fascistCount)
-		for(let i = 0; i < facists.length; i++) {
-			for(let j = 0; j < facists.length; j++) {
+		// Update the message variable for each fascist so they know who their teammates are
+		let fascists = players.slice(1, 1 + rules.fascistCount)
+		for(let i = 0; i < fascists.length; i++) {
+			for(let j = 0; j < fascists.length; j++) {
 				let k = j + 1;
-				if (k > facists.length) k = 0;
+				if (k > fascists.length) k = 0;
 
-				// i+1 is to reassociate facists element number with original players element number
-				if (j === facists.length) {
-					playerRoles[i+1].message += facists[k].userName + "."	
+				// i+1 is to reassociate fascists element number with original players element number
+				if (j === fascists.length) {
+					playerRoles[i+1].message += fascists[k].userName + "."	
 				}
 				else {
-					playerRoles[i+1].message += facists[k].userName + ", "
+					playerRoles[i+1].message += fascists[k].userName + ", "
 				}
 			}
 		}
