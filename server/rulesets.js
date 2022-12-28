@@ -88,21 +88,22 @@ export class SecretHitler {
 		
 		// Update the message variable for each fascist so they know who their teammates are
 		let fascists = players.slice(1, 1 + rules.fascistCount)
-		for(let i = 0; i < fascists.length; i++) {
-			for(let j = 0; j < fascists.length; j++) {
-				let k = j + 1;
-				if (k > fascists.length) k = 0;
+        if (fascists.length > 1) {
+            for(let i = 0; i < fascists.length; i++) {
+                for(let j = 0; j < fascists.length; j++) {
+                    let k = j + 1;
+                    if (k > fascists.length) k = 0;
 
-				// i+1 is to reassociate fascists element number with original players element number
-				if (j === fascists.length) {
-					playerRoles[i+1].message += fascists[k].userName + "."	
-				}
-				else {
-					playerRoles[i+1].message += fascists[k].userName + ", "
-				}
-			}
-		}
-		
+                    // i+1 is to reassociate fascists element number with original players element number
+                    if (j === fascists.length) {
+                        playerRoles[i+1].message += fascists[k].userName + "."
+                    }
+                    else {
+                        playerRoles[i+1].message += fascists[k].userName + ", "
+                    }
+                }
+            }
+        }
         
         return playerRoles 
 		
