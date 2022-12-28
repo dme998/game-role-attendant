@@ -65,27 +65,24 @@ export class SecretHitler {
 			players[i] = players[rand];
 			players[rand] = workingElement;
 		}
-		
-		for(let i = 1; i < rules.fascistCount; i++) {
-			playerRoles.push({[players[i].entityId]: "fascist", color: "negative", 
-							 message: `${players[i].userName}, your Secret Role is fascist. The identity of Hitler is ${players[0].userName}. `})
+
+		for(let i = 1; i < rules.fascistCount + 1; i++) {
+			playerRoles.push({playerId: players[i].entityId, RoleType: "Fascist", color: "negative",
+							 message: `${players[i].userName}, your Secret Role is Fascist. The identity of Hitler is ${players[0].userName}. `})
 		}
 		
-		for(let i = 1 + rules.fascistCount; i < rules.liberalCount; i++) {
-			playerRoles.push({[players[i].entityId]: "Liberal", color: "info", 
-							 message: `${players[0].userName}, your Secret Role is Liberal.` })
+		for(let i = 1 + rules.fascistCount; i < rules.liberalCount + rules.fascistCount + 1; i++) {
+			playerRoles.push({playerId: players[i].entityId, RoleType: "Liberal", color: "info", 
+							 message: `${players[i].userName}, your Secret Role is Liberal.` })
 		}
 		
 		if (rules.fascistsKnownToHitler) {
-        	playerRoles.push({[players[0].entityId]: "Hitler", color: "maroon", 
-							  message: `${players[0].userName}, your Secret Role is Hitler and your fellow fascist is ${players[1].userName}` })
-			for(let i = 0; i < players.length; i++) {
-				
-			}
+        	playerRoles.push({playerId: players[0].entityId, RoleType: "Hitler", color: "maroon",
+							  message: `${players[0].userName}, your Secret Role is Hitler and your fellow Fascist is ${players[1].userName}.` })
         }
 		else {
-			playerRoles.push({[players[0].entityId]: "Hitler", color: "maroon",
-							 message: `${players[0].userName}, your Secret Role is Hitler. Your fellow fascists: ` })
+			playerRoles.push({playerId: players[0].entityId, RoleType: "Hitler", color: "maroon",
+							 message: `${players[0].userName}, your Secret Role is Hitler. Your fellow Fascists: ` })
 		}
 		
 		
