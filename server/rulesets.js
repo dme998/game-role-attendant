@@ -1,4 +1,4 @@
-import { choice, removeItem } from './utils.js'
+import { choice } from './utils.js'
 
 export class SecretHitler {
     constructor(players) {
@@ -68,7 +68,7 @@ export class SecretHitler {
 
 		for(let i = 1; i < rules.fascistCount + 1; i++) {
 			playerRoles.push({playerId: players[i].entityId, RoleType: "Fascist", color: "negative",
-							 message: `${players[i].userName}, your Secret Role is Fascist. The identity of Hitler is ${players[0].userName}. `})
+							 message: `${players[i].userName}, your Secret Role is Fascist. The identity of Hitler is ${players[0].userName}. Your Fascist teammates are:  `})
 		}
 		
 		for(let i = 1 + rules.fascistCount; i < rules.liberalCount + rules.fascistCount + 1; i++) {
@@ -90,16 +90,16 @@ export class SecretHitler {
 		let fascists = players.slice(1, 1 + rules.fascistCount)
         if (fascists.length > 1) {
             for(let i = 0; i < fascists.length; i++) {
-                for(let j = 0; j < fascists.length; j++) {
+                for(let j = i; j < fascists.length - 1 + i; j++) {
                     let k = j + 1;
-                    if (k > fascists.length) k = 0;
+                    if (k > fascists.length - 1) k = 0;
 
                     // i+1 is to reassociate fascists element number with original players element number
                     if (j === fascists.length) {
-                        playerRoles[i+1].message += fascists[k].userName + "."
+                        playerRoles[i].message += fascists[k].userName + "."
                     }
                     else {
-                        playerRoles[i+1].message += fascists[k].userName + ", "
+                        playerRoles[i].message += fascists[k].userName + ", "
                     }
                 }
             }
