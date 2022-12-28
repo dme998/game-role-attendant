@@ -67,24 +67,24 @@ class SecretHitler {
 		}
 		
 		for(let i = 1; i < rules.fascistCount; i++) {
-			playerRoles.push({[players[i].entityID]: "fascist", color: "negative", 
+			playerRoles.push({[players[i].entityId]: "fascist", color: "negative", 
 							 message: `${players[i].userName}, your Secret Role is fascist. The identity of Hitler is ${players[0].userName}. `})
 		}
 		
 		for(let i = 1 + rules.fascistCount; i < rules.liberalCount; i++) {
-			playerRoles.push({[players[i].entityID]: "Liberal", color: "info", 
+			playerRoles.push({[players[i].entityId]: "Liberal", color: "info", 
 							 message: `${players[0].userName}, your Secret Role is Liberal.` })
 		}
 		
 		if (rules.fascistsKnownToHitler) {
-        	playerRoles.push({[players[0].entityID]: "Hitler", color: "maroon", 
+        	playerRoles.push({[players[0].entityId]: "Hitler", color: "maroon", 
 							  message: `${players[0].userName}, your Secret Role is Hitler and your fellow fascist is ${players[1].userName}` })
 			for(let i = 0; i < players.length; i++) {
 				
 			}
         }
 		else {
-			playerRoles.push({[players[0].entityID]: "Hitler", color: "maroon",
+			playerRoles.push({[players[0].entityId]: "Hitler", color: "maroon",
 							 message: `${players[0].userName}, your Secret Role is Hitler. Your fellow fascists: ` })
 		}
 		
