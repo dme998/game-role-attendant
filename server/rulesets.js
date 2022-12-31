@@ -67,8 +67,11 @@ export class SecretHitler {
 		}
 
 		for(let i = 1; i < rules.fascistCount + 1; i++) {
+            let message = (rules.fascistCount < 2) ?
+                `${players[i].userName}, your Secret Role is Fascist. The identity of Hitler is ${players[0].userName}.` :
+                `${players[i].userName}, your Secret Role is Fascist. The identity of Hitler is ${players[0].userName}. Your fascist teammates are: `
 			playerRoles.push({playerId: players[i].entityId, RoleType: "Fascist", color: "negative",
-							 message: `${players[i].userName}, your Secret Role is Fascist. The identity of Hitler is ${players[0].userName}. Your Fascist teammates are:  `})
+							 message: message})
 		}
 		
 		for(let i = 1 + rules.fascistCount; i < rules.liberalCount + rules.fascistCount + 1; i++) {
@@ -86,29 +89,29 @@ export class SecretHitler {
 		}
 		
 		
-	// Update the message variable for each fascist so they know who their teammates are
-	let fascists = players.slice(1, 1 + rules.fascistCount)
-	switch(fascists.length) {
-	    case 1: 
-		break;
-	    case 2: 
-		//first fascist's message
-		playerRoles[0].message += fascists[1].userName + "."
-		//second fascist's message
-		playerRoles[1].message += fascists[0].userName + "."
-		break;
-	    case 3:     
-		//first fascist's message
-		playerRoles[0].message += fascists[1].userName + ", "
-		playerRoles[0].message += fascists[2].userName + "."
-		//second fascist's message
-		playerRoles[1].message += fascists[0].userName + ", "
-		playerRoles[1].message += fascists[2].userName + "."
-		//third fascist's message
-		playerRoles[2].message += fascists[0].userName + ", "
-		playerRoles[2].message += fascists[1].userName + "."
-		break;
-	}
+		// Update the message variable for each fascist so they know who their teammates are
+		let fascists = players.slice(1, 1 + rules.fascistCount)
+        switch(fascists.length) {
+            case 1:
+                break;
+            case 2:
+                //first fascist's message
+                playerRoles[0].message += fascists[1].userName + "."
+                //second fascist's message
+                playerRoles[1].message += fascists[0].userName + "."
+                break;
+            case 3:
+                //first fascist's message
+                playerRoles[0].message += fascists[1].userName + ", "
+                playerRoles[0].message += fascists[2].userName + "."
+                //second fascist's message
+                playerRoles[1].message += fascists[0].userName + ", "
+                playerRoles[1].message += fascists[2].userName + "."
+                //third fascist's message
+                playerRoles[2].message += fascists[0].userName + ", "
+                playerRoles[2].message += fascists[1].userName + "."
+                break;
+        }
         
         return playerRoles 
 		
