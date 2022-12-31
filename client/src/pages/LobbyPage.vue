@@ -84,6 +84,24 @@ export default {
         console.log(lobbyData);
         this.players = lobbyData;
       });
+      socketIo.on("invalid-user", (message) => {
+        this.$router.push('/')
+        this.$q.notify({
+          color: "negative",
+          textColor: "white",
+          icon: "report_problem",
+          message: message,
+        });
+      });
+      socketIo.on("lobby-close", (message) => {
+        this.$router.push('/')
+        this.$q.notify({
+          color: "negative",
+          textColor: "white",
+          icon: "report_problem",
+          message: message,
+        });
+      })
     },
     onSubmit() {
       api

@@ -43,21 +43,40 @@ server.listen(3000, () => {
 });
 
 // All web socket server logic.
+// TODO: Find a way to let players refresh without being disconnected and kicked from their lobby.
 io.on("connect", async (socket) => {
     console.log(socket.playerId);
     let player = await playerRepository.fetch(socket.playerId)
-    let room = await roomRepository.fetch(player.roomId)
-    socket.join(room.roomName);
-    let lobbyData = await playerRepository.search().where('roomId').equals(room.entityId).sortBy('dateJoined', 'ASC').all();
+    if (!player.roomId) {
+        socket.emit("invalid-user", "Please create or join a valid game.")
+    }
+    else {
+        let room = await roomRepository.fetch(player.roomId)
+        socket.join(room.roomName);
+        let lobbyData = await playerRepository.search().where('roomId').equals(room.entityId).sortBy('dateJoined', 'ASC').all();
 
-    io.to(room.roomName).emit("send-data", playersOut(lobbyData));
-
+        io.to(room.roomName).emit("send-data", playersOut(lobbyData));
+    }
     socket.on("disconnect", async (reason) => {
-        await playerRepository.remove(socket.playerId);
-        socket.leave(room.roomName);
-        console.log(reason);
+        let player = await playerRepository.fetch(socket.playerId)
+        let room = await roomRepository.fetch(player.roomId)
+        // If player is host, shut down the lobby.
+        if (player.isHost) {
+            let players = await playerRepository.search().where('roomId').equals(room.entityId).all();
+            io.to(room.roomName).emit("lobby-close", "The host has left, please find/host a new game.")
+            for (let p in players) {
+                await playerRepository.remove(players[p].entityId);
+            }
+            await roomRepository.remove(room.entityId);
+            socket.leave(room.roomName);
+        }
+        // Else only remove the player exiting.
+        else {
+            await playerRepository.remove(socket.playerId);
+            socket.leave(room.roomName);
 
-        lobbyData = await playerRepository.search().where('roomId').equals(room.entityId).sortBy('dateJoined', 'ASC').all();
-        io.to(room.roomName).emit("send-data", lobbyData)
+            let lobbyData = await playerRepository.search().where('roomId').equals(room.entityId).sortBy('dateJoined', 'ASC').all();
+            io.to(room.roomName).emit("send-data", playersOut(lobbyData));
+        }
     });
 });
