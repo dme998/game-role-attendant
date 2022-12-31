@@ -59,9 +59,13 @@ io.on("connect", async (socket) => {
     }
     socket.on("disconnect", async (reason) => {
         let player = await playerRepository.fetch(socket.playerId)
-        let room = await roomRepository.fetch(player.roomId)
+        let room = await roomRepository.fetch(player.roomId);
+        if (!player.roomId) {
+            // Do nothing, because the player has already been deleted on lobby cascade delete.
+            // This else if is important to not pass null values to DB query below. (It crashes the app)
+        }
         // If player is host, shut down the lobby.
-        if (player.isHost) {
+        else if (player.isHost) {
             let players = await playerRepository.search().where('roomId').equals(room.entityId).all();
             io.to(room.roomName).emit("lobby-close", "The host has left, please find/host a new game.");
             for (let p in players) {
@@ -69,10 +73,6 @@ io.on("connect", async (socket) => {
             }
             await roomRepository.remove(room.entityId);
             socket.leave(room.roomName);
-        }
-        else if (!player.roomId) {
-            // Do nothing, because the player has already been deleted on lobby cascade delete.
-            // This else if is important to not pass null values to DB query below. (It crashes the app)
         }
         // Else only remove the player exiting.
         else {
