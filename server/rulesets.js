@@ -86,25 +86,29 @@ export class SecretHitler {
 		}
 		
 		
-		// Update the message variable for each fascist so they know who their teammates are
-        // TODO: Fix this for 9 or more players, 3rd fascist has duplicated teammates in message.
-		let fascists = players.slice(1, 1 + rules.fascistCount)
-        if (fascists.length > 1) {
-            for(let i = 0; i < fascists.length; i++) {
-                for(let j = i; j < fascists.length - 1 + i; j++) {
-                    let k = j + 1;
-                    if (k > fascists.length - 1) k = 0;
-
-                    // i+1 is to reassociate fascists element number with original players element number
-                    if (j === fascists.length) {
-                        playerRoles[i].message += fascists[k].userName + "."
-                    }
-                    else {
-                        playerRoles[i].message += fascists[k].userName + ", "
-                    }
-                }
-            }
-        }
+	// Update the message variable for each fascist so they know who their teammates are
+	let fascists = players.slice(1, 1 + rules.fascistCount)
+	switch(fascists.length) {
+	    case 1: 
+		break;
+	    case 2: 
+		//first fascist's message
+		playerRoles[0].message += fascists[1].userName + "."
+		//second fascist's message
+		playerRoles[1].message += fascists[0].userName + "."
+		break;
+	    case 3:     
+		//first fascist's message
+		playerRoles[0].message += fascists[1].userName + ", "
+		playerRoles[0].message += fascists[2].userName + "."
+		//second fascist's message
+		playerRoles[1].message += fascists[0].userName + ", "
+		playerRoles[1].message += fascists[2].userName + "."
+		//third fascist's message
+		playerRoles[2].message += fascists[0].userName + ", "
+		playerRoles[2].message += fascists[1].userName + "."
+		break;
+	}
         
         return playerRoles 
 		
