@@ -92,6 +92,7 @@ export default {
           icon: "report_problem",
           message: message,
         });
+        socketIo.disconnect();
       });
       socketIo.on("lobby-close", (message) => {
         this.$router.push('/')
@@ -101,7 +102,8 @@ export default {
           icon: "report_problem",
           message: message,
         });
-      })
+        socketIo.disconnect();
+      });
     },
     onSubmit() {
       api
