@@ -49,7 +49,7 @@ export class SecretHitler {
         }
     }
 
-    setRolesForPlayers() {
+    async setRolesForPlayers() {
         
 		// Copy players to push and pop freely.
         let players = [...this.players];

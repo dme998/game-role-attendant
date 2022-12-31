@@ -96,7 +96,7 @@ router.put('/join', async (req, res) => {
 router.put('/start', async (req, res) => {
 	let player = await playerRepository.fetch(req.body.playerId);
 	let players = await playerRepository.search().where('roomId').equals(player.roomId).all();
-	let data = new SecretHitler(players).setRolesForPlayers();
+	let data = await new SecretHitler(players).setRolesForPlayers();
 	console.log(data)
 	res.status(200);
 	return res.send('')
