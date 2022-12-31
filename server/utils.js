@@ -47,3 +47,13 @@ export function removeItem(arr, value) {
         return element !== value;
     })
 }
+
+// This function removes internal data that does not need to be sent to the client.
+export function playersOut(playerObjects) {
+    let result = []
+    for (let player in playerObjects) {
+        result.push({userName: playerObjects[player].userName, isHost: playerObjects[player].isHost})
+    }
+
+    return result
+}

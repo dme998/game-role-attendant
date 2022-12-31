@@ -5,6 +5,7 @@ import cors from 'cors';
 import { router as roomRouter } from "./room-router.js";
 import { roomRepository } from "./room.js";
 import { playerRepository } from "./player.js";
+import { playersOut } from "./utils.js";
 
 let app = express();
 const server = http.createServer(app);
@@ -49,7 +50,7 @@ io.on("connect", async (socket) => {
     socket.join(room.roomName);
     let lobbyData = await playerRepository.search().where('roomId').equals(room.entityId).sortBy('dateJoined', 'ASC').all();
 
-    io.to(room.roomName).emit("send-data", lobbyData);
+    io.to(room.roomName).emit("send-data", playersOut(lobbyData));
 
     socket.on("disconnect", async (reason) => {
         await playerRepository.remove(socket.playerId);

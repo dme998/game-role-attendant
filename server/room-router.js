@@ -98,7 +98,8 @@ router.put('/start', async (req, res) => {
 	let players = await playerRepository.search().where('roomId').equals(player.roomId).all();
 	let data = new SecretHitler(players).setRolesForPlayers();
 	console.log(data)
-    return res.status(200);
+	res.status(200);
+	return res.send('')
 });
 
 router.get('/player/:id', async (req, res) => {
