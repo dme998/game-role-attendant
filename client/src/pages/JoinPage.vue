@@ -1,7 +1,11 @@
 <template>
   <q-page class="flex flex-center">
     <div class="q-pa-md">
-      <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
+      <q-form
+        @submit="onSubmit(name, room)"
+        @reset="onReset"
+        class="q-gutter-md"
+      >
         <q-input
           filled
           v-model="name"
@@ -44,6 +48,7 @@
 <script>
 import { ref } from "vue";
 import { useQuasar } from "quasar";
+import { api } from "boot/axios";
 
 export default {
   name: "JoinPage",
@@ -58,20 +63,40 @@ export default {
       name,
       room,
 
-      onSubmit() {
-        $q.notify({
-          color: "green-4",
-          textColor: "white",
-          icon: "cloud_done",
-          message: "Room joined",
-        });
-      },
-
       onReset() {
         name.value = null;
         room.value = null;
       },
     };
+  },
+  methods: {
+    onSubmit(userName, room) {
+      api
+        .put("/room/join", {
+          userName: userName,
+          roomCode: room,
+        })
+        .then((res) => {
+          localStorage.setItem("playerId", res.data.playerId);
+          localStorage.setItem("userName", res.data.userName);
+          this.$router.push(`/lobby/${res.data.roomCode}`);
+          this.$q.notify({
+            color: "positive",
+            textColor: "white",
+            icon: "cloud_done",
+            message: `Room ${res.data.roomCode} joined`,
+          });
+        })
+        .catch((e) => {
+          this.$q.notify({
+            color: "negative",
+            textColor: "white",
+            icon: "report_problem",
+            message: "Request failed.",
+          });
+          console.log(e);
+        });
+    },
   },
 };
 </script>

@@ -1,7 +1,11 @@
 <template>
   <q-page class="flex flex-center">
     <div class="q-pa-md">
-      <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
+      <q-form
+        @submit="onSubmit(name, model, playerNum)"
+        @reset="onReset"
+        class="q-gutter-md"
+      >
         <q-input
           filled
           v-model="name"
@@ -56,7 +60,7 @@
 <script>
 import { defineComponent } from "vue";
 import { ref } from "vue";
-import { useQuasar } from "quasar";
+import { api } from "boot/axios";
 
 const stringOptions = ["Secret Hitler"];
 const minPlayer = 5;
@@ -66,35 +70,55 @@ export default defineComponent({
   name: "HostPage",
 
   setup() {
-    const $q = useQuasar();
-
     const name = ref(null);
     const playerNum = ref(null);
     const options = ref(stringOptions);
+    const model = ref("Secret Hitler");
 
     return {
       name,
       playerNum,
-      model: ref("Secret Hitler"),
+      model,
       stringOptions,
       options,
       minPlayer,
       maxPlayer,
-
-      onSubmit() {
-        $q.notify({
-          color: "green-4",
-          textColor: "white",
-          icon: "cloud_done",
-          message: "Room created",
-        });
-      },
 
       onReset() {
         name.value = null;
         playerNum.value = null;
       },
     };
+  },
+  methods: {
+    onSubmit(userName, ruleset, playerNum) {
+      api
+        .put("/room", {
+          userName: userName,
+          ruleset: ruleset,
+          playerCount: playerNum,
+        })
+        .then((res) => {
+          localStorage.setItem("playerId", res.data.playerId);
+          localStorage.setItem("userName", res.data.userName);
+          this.$router.push(`/lobby/${res.data.roomCode}`);
+          this.$q.notify({
+            color: "positive",
+            textColor: "white",
+            icon: "cloud_done",
+            message: `Room ${res.data.roomCode} created`,
+          });
+        })
+        .catch((e) => {
+          this.$q.notify({
+            color: "negative",
+            textColor: "white",
+            icon: "report_problem",
+            message: "Request failed.",
+          });
+          console.log(e);
+        });
+    },
   },
 });
 </script>

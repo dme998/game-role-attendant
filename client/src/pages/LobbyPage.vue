@@ -5,7 +5,9 @@
         <q-list bordered padding id="player-list">
           <q-item>
             <q-item-section>
-              <q-item-label overline>ROOM CODE: A8ZV5</q-item-label>
+              <q-item-label overline>{{
+                `ROOM CODE: ${this.$route.params.roomCode}`
+              }}</q-item-label>
               <q-item-label></q-item-label>
             </q-item-section>
           </q-item>
@@ -56,70 +58,86 @@
 </template>
 
 <script>
-import { useQuasar } from "quasar";
+import { socketIo } from "boot/socket.io";
+import { api } from "boot/axios";
 
 export default {
   name: "LobbyPage",
 
-  setup() {
-    const $q = useQuasar();
-
+  data() {
     return {
-      onSubmit() {
-        $q.notify({
-          color: "green-4",
-          textColor: "white",
-          icon: "cloud_done",
-          message: "Submitted!",
-        });
-      },
-
-      onAbort() {
-        $q.notify({
-          color: "red-5",
-          textColor: "white",
-          type: "negative",
-          message: "Aborted!",
-        });
-      },
+      players: [],
     };
   },
 
-  data() {
-    return {
-      players: {
-        player1: {
-          id: 0,
-          userName: "Tut_k0",
-          isHost: true,
-        },
-        player2: {
-          id: 1,
-          userName: "dme_998",
-          isHost: false,
-        },
-        player3: {
-          id: 2,
-          userName: "Drizz",
-          isHost: false,
-        },
-        player4: {
-          id: 3,
-          userName: "Finne",
-          isHost: false,
-        },
-        player5: {
-          id: 4,
-          userName: "Scav From Tarkov",
-          isHost: false,
-        },
-        player6: {
-          id: 5,
-          userName: "Turtle",
-          isHost: false,
-        },
-      },
-    };
+  mounted() {
+    this.fetchRoomData();
+  },
+
+  methods: {
+    fetchRoomData() {
+      const playerId = localStorage.getItem("playerId");
+      socketIo.auth = { playerId };
+      socketIo.connect();
+      socketIo.on("send-data", (lobbyData) => {
+        console.log(lobbyData);
+        this.players = lobbyData;
+      });
+      socketIo.on("invalid-user", (message) => {
+        this.$router.push("/");
+        this.$q.notify({
+          color: "negative",
+          textColor: "white",
+          icon: "report_problem",
+          message: message,
+        });
+        socketIo.disconnect();
+      });
+      socketIo.on("lobby-close", (message) => {
+        this.$router.push("/");
+        this.$q.notify({
+          color: "negative",
+          textColor: "white",
+          icon: "report_problem",
+          message: message,
+        });
+        socketIo.disconnect();
+      });
+    },
+    onSubmit() {
+      api
+        .put("/room/start", {
+          playerId: localStorage.getItem("playerId"),
+        })
+        .then((res) => {
+          console.log(res);
+          this.$q.notify({
+            color: "positive",
+            textColor: "white",
+            icon: "cloud_done",
+            message: `Game is starting....`,
+          });
+        })
+        .catch((e) => {
+          this.$q.notify({
+            color: "negative",
+            textColor: "white",
+            icon: "report_problem",
+            message: "Request failed.",
+          });
+          console.log(e);
+        });
+    },
+    onAbort() {
+      socketIo.disconnect();
+      this.$router.push(`/`);
+      this.$q.notify({
+        type: "negative",
+        color: "negative",
+        textColor: "white",
+        message: `Left room ${this.$route.params.roomCode}`,
+      });
+    },
   },
 };
 </script>

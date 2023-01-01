@@ -19,6 +19,8 @@ docker-compose down
 ```
 
 ## Example requests
+
+### Create room
 - bash:
 ```bash
 # Create a room passing details you would from the front end.
@@ -44,6 +46,17 @@ Invoke-WebRequest -URI http://localhost:3000/room/player/01G90FH9Y93BJ95K84XB2KW
 
 # Fetch room info:
 Invoke-WebRequest -URI http://localhost:3000/room/01G90FH9Y8MQE17WGCX1WGKDYW -Method GET
+```
+
+### Join Room
+```bash
+curl -X PUT -H "Content-Type: application/json" \
+-d "{\"userName\": \"tut0\", \"roomCode\": \"A17G\"}" \
+http://localhost:3000/room/join -s
+```
+
+```powershell
+Invoke-WebRequest -URI http://localhost:3000/room/join -Method PUT -Body '{"userName": "tut0", "roomCode": "A17G"}' -ContentType "application/json"
 ```
 
 ## Teardown
