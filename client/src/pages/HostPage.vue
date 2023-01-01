@@ -96,7 +96,7 @@ export default defineComponent({
         .put("/room", {
           userName: userName,
           ruleset: ruleset,
-          playerCount: playerNum
+          playerCount: playerNum,
         })
         .then((res) => {
           localStorage.setItem("playerId", res.data.playerId);

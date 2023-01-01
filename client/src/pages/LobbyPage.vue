@@ -58,7 +58,6 @@
 </template>
 
 <script>
-import { useQuasar } from "quasar";
 import { socketIo } from "boot/socket.io";
 import { api } from "boot/axios";
 
@@ -85,7 +84,7 @@ export default {
         this.players = lobbyData;
       });
       socketIo.on("invalid-user", (message) => {
-        this.$router.push('/')
+        this.$router.push("/");
         this.$q.notify({
           color: "negative",
           textColor: "white",
@@ -95,7 +94,7 @@ export default {
         socketIo.disconnect();
       });
       socketIo.on("lobby-close", (message) => {
-        this.$router.push('/')
+        this.$router.push("/");
         this.$q.notify({
           color: "negative",
           textColor: "white",
@@ -108,10 +107,10 @@ export default {
     onSubmit() {
       api
         .put("/room/start", {
-          playerId: localStorage.getItem("playerId")
+          playerId: localStorage.getItem("playerId"),
         })
         .then((res) => {
-          console.log(res)
+          console.log(res);
           this.$q.notify({
             color: "positive",
             textColor: "white",
