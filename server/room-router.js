@@ -40,16 +40,17 @@ router.put('/', async (req, res) => {  // room
 
 	// Make sure player count is valid.
 	const ruleset = new RULESETS[room.ruleset];
-	const req_playerCount = parseInt(req.body.playerCount);
-	if (!req_playerCount) {
+	const playerCount = parseInt(req.body.playerCount);
+	if (!playerCount) {
 		res.status(400);
 		return res.send();
 	}
-	if (req_playerCount < ruleset.playerCounts.minCount || req_playerCount > ruleset.playerCounts.maxCount) {
+	if (playerCount < ruleset.playerCounts.minCount || playerCount > ruleset.playerCounts.maxCount) {
 		res.status(422);
 		return res.send("Player count invalid.");
 	}
-	
+
+	room.playerCount = playerCount ?? null;
 	room.dateCreated = new Date() ?? null;
 	room.dateEnd = getTTLDate(room.dateCreated, MAX_TTL) ?? null;
 	const roomId = await roomRepository.save(room);  //async
@@ -63,9 +64,6 @@ router.put('/', async (req, res) => {  // room
     const playerId = await playerRepository.save(player)
 	await playerRepository.expire(playerId, MAX_TTL)
 
-    // return res.send({roomId, playerId});  //debug
-
-	// const players = await playerRepository.search().where('roomId').equals(roomId).sortBy('dateJoined').all()
 	return res.send({roomCode, userName, playerId});
 
 });
