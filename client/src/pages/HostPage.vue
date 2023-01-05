@@ -114,9 +114,8 @@ export default defineComponent({
             color: "negative",
             textColor: "white",
             icon: "report_problem",
-            message: "Request failed.",
+            message: e.response.data.errorMessage,
           });
-          console.log(e);
         });
     },
   },
