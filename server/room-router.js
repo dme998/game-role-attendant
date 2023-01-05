@@ -37,6 +37,13 @@ router.put('/', async (req, res) => {  // room
 	else {
 		room.ruleset = Object.keys(RULESETS)[0] ?? null;
 	}
+
+	// Make sure player count is valid.
+	const playerCount = RULESETS[room.ruleset].playerCounts
+	if (req.body.playerCount < playerCount.minCount || req.body.playerCount > playerCount.maxCount) {
+		res.status(422)
+		return res.send("Player count invalid.")
+	}
 	
 	room.dateCreated = new Date() ?? null;
 	room.dateEnd = getTTLDate(room.dateCreated, MAX_TTL) ?? null;

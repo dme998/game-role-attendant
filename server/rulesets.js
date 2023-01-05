@@ -10,6 +10,10 @@ export class SecretHitler {
         }
     }
 
+    get playerCounts () {
+        return {minCount: this.minPlayers, maxCount: this.maxPlayers}
+    }
+
     determineRoleCount(playerCount) {
         let liberalCount;
         let fascistCount;
