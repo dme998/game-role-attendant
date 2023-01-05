@@ -45,7 +45,7 @@ router.put('/', async (req, res) => {  // room
 		res.status(400);
 		return res.send();
 	}
-	if (req.body.playerCount < ruleset.playerCounts.minCount || req.body.playerCount > ruleset.playerCounts.maxCount) {
+	if (req_playerCount < ruleset.playerCounts.minCount || req_playerCount > ruleset.playerCounts.maxCount) {
 		res.status(422);
 		return res.send("Player count invalid.");
 	}
