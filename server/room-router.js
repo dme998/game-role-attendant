@@ -76,14 +76,19 @@ router.put('/join', async (req, res) => {
 		res.status(404);
 		return res.send("Room not found!")
 	}
-	
-	/* Check if duplicate username exists and send error if so */
+
 	const userName = normalizeUsername(req.body.userName);
 	const playerQuery = await playerRepository.search().where('roomId').equals(room.entityId).all();
 	let existingPlayers = []
-	playerQuery.forEach((p) => {
-		existingPlayers.push(p.entityFields.userName._value.toLowerCase());
-	});
+	for (let p in playerQuery) {
+		existingPlayers.push(playerQuery[p].userName.toLowerCase());
+	}
+	// Check if room is full
+	if (existingPlayers.length === room.playerCount) {
+		res.status(409);
+		return res.send("Room is full!");
+	}
+	// Check if username is already taken
 	if (existingPlayers.includes(userName.toLowerCase())) {
 		res.status(409);
 		return res.send("Username is already taken!")
