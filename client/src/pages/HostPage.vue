@@ -110,11 +110,12 @@ export default defineComponent({
           });
         })
         .catch((e) => {
+          const error = e.response ? e.response.data.errorMessage : "Request Failed."
           this.$q.notify({
             color: "negative",
             textColor: "white",
             icon: "report_problem",
-            message: e.response.data.errorMessage,
+            message: error,
           });
         });
     },
