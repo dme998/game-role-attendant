@@ -6,7 +6,7 @@ import { SecretHitler } from "./rulesets.js";
 
 export const router = Router()
 const MAX_TTL = 21600; // expiration time to live to be used by generated objects in seconds.
-const RULESETS = ["Secret Hitler", "Undefined Ruleset"];
+const RULESETS = {"Secret Hitler": SecretHitler}
 
 router.put('/', async (req, res) => {  // room
     let room = roomRepository.createEntity();
@@ -31,13 +31,11 @@ router.put('/', async (req, res) => {  // room
 	
 	/* check user input and match to ruleset
 	** if no user input exists, default to first index in ruleset */
-	for(let i = 0; i < RULESETS.length; i++) {
-		if (req.body.ruleset === RULESETS[i]) {
-			room.ruleset = req.body.ruleset ?? null;
-		}
-		else {
-			room.ruleset = RULESETS[0] ?? null;
-		}
+	if (RULESETS[req.body.ruleset]) {
+		room.ruleset = req.body.ruleset ?? null;
+	}
+	else {
+		room.ruleset = Object.keys(RULESETS)[0] ?? null;
 	}
 	
 	room.dateCreated = new Date() ?? null;
