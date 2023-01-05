@@ -39,10 +39,15 @@ router.put('/', async (req, res) => {  // room
 	}
 
 	// Make sure player count is valid.
-	const playerCount = RULESETS[room.ruleset].playerCounts
-	if (req.body.playerCount < playerCount.minCount || req.body.playerCount > playerCount.maxCount) {
-		res.status(422)
-		return res.send("Player count invalid.")
+	const ruleset = new RULESETS[room.ruleset];
+	const req_playerCount = parseInt(req.body.playerCount);
+	if (!req_playerCount) {
+		res.status(400);
+		return res.send();
+	}
+	if (req.body.playerCount < ruleset.playerCounts.minCount || req.body.playerCount > ruleset.playerCounts.maxCount) {
+		res.status(422);
+		return res.send("Player count invalid.");
 	}
 	
 	room.dateCreated = new Date() ?? null;
