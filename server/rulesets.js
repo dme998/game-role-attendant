@@ -5,9 +5,6 @@ export class SecretHitler {
         this.players = players;
         this.minPlayers = 5;
         this.maxPlayers = 10;
-        if (this.players.length < this.minPlayers || this.players.length > this.maxPlayers) {
-            throw Error("That boy ain't right....");
-        }
     }
 
     get playerCounts () {
