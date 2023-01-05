@@ -55,7 +55,7 @@ io.on("connect", async (socket) => {
         socket.join(room.roomName);
         let lobbyData = await playerRepository.search().where('roomId').equals(room.entityId).sortBy('dateJoined', 'ASC').all();
 
-        io.to(room.roomName).emit("send-data", playersOut(lobbyData));
+        io.to(room.roomName).emit("send-data", {players: playersOut(lobbyData), roomSize: room.playerCount});
     }
     socket.on("disconnect", async (reason) => {
         let player = await playerRepository.fetch(socket.playerId)
@@ -80,7 +80,7 @@ io.on("connect", async (socket) => {
             socket.leave(room.roomName);
 
             let lobbyData = await playerRepository.search().where('roomId').equals(room.entityId).sortBy('dateJoined', 'ASC').all();
-            io.to(room.roomName).emit("send-data", playersOut(lobbyData));
+            io.to(room.roomName).emit("send-data", {players: playersOut(lobbyData), roomSize: room.playerCount});
         }
     });
 });
