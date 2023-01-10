@@ -21,9 +21,9 @@
 
         <q-select
           filled
-          v-model="model"
+          v-model="this.model"
           label="Ruleset"
-          :options="stringOptions"
+          :options="this.rulesetOptions"
           behavior="menu"
         />
 
@@ -62,7 +62,6 @@ import { defineComponent } from "vue";
 import { ref } from "vue";
 import { api } from "boot/axios";
 
-const stringOptions = ["Secret Hitler"];
 const minPlayer = 5;
 const maxPlayer = 10;
 
@@ -72,15 +71,10 @@ export default defineComponent({
   setup() {
     const name = ref(null);
     const playerNum = ref(null);
-    const options = ref(stringOptions);
-    const model = ref("Secret Hitler");
 
     return {
       name,
       playerNum,
-      model,
-      stringOptions,
-      options,
       minPlayer,
       maxPlayer,
 
@@ -90,7 +84,35 @@ export default defineComponent({
       },
     };
   },
+
+  data () {
+    return {
+      rulesetOptions: ["Secret Hitler"],
+      model: "Secret Hitler",
+    }
+  },
+
+  mounted() {
+    this.fetchRulesets();
+  },
+
   methods: {
+    fetchRulesets() {
+      api.get("/room/rulesets")
+        .then((res) => {
+        this.rulesetOptions = res.data;
+        this.model = res.data[0];
+      })
+        .catch((e) => {
+          this.$q.notify({
+            color: "negative",
+            textColor: "white",
+            icon: "report_problem",
+            message: "Request failed.",
+          });
+        })
+    },
+
     onSubmit(userName, ruleset, playerNum) {
       api
         .put("/room", {
