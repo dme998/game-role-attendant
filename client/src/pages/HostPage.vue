@@ -37,8 +37,8 @@
             (val) =>
               (val !== null && val !== '') || 'Please select amount of players',
             (val) =>
-              (val >= minPlayer && val <= maxPlayer) ||
-              `Please select within ${minPlayer} ➡️ ${maxPlayer} players`,
+              (val >= this.rulesets[this.model].minCount && val <= this.rulesets[this.model].maxCount) ||
+              `Please select within ${this.rulesets[this.model].minCount} ➡️ ${this.rulesets[this.model].maxCount} players`,
           ]"
         />
 
@@ -62,8 +62,6 @@ import { defineComponent } from "vue";
 import { ref } from "vue";
 import { api } from "boot/axios";
 
-const minPlayer = 5;
-const maxPlayer = 10;
 
 export default defineComponent({
   name: "HostPage",
@@ -75,8 +73,6 @@ export default defineComponent({
     return {
       name,
       playerNum,
-      minPlayer,
-      maxPlayer,
 
       onReset() {
         name.value = null;
