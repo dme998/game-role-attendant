@@ -45,6 +45,7 @@ router.put('/', async (req, res) => {  // room
 		res.status(400);
 		return res.send({errorMessage: "Bad request."});
 	}
+	// TODO: Try removing playerCounts and accessing mincount and maxcount straight away.
 	if (playerCount < ruleset.playerCounts.minCount || playerCount > ruleset.playerCounts.maxCount) {
 		res.status(422);
 		return res.send({errorMessage: "Player count invalid."});
@@ -106,7 +107,12 @@ router.put('/join', async (req, res) => {
 });
 
 router.get('/rulesets', async (req, res) => {
-	return res.send(Object.keys(RULESETS));
+	let result = {}
+	for (let rulesetName in RULESETS) {
+		const ruleset = new RULESETS[rulesetName];
+		result[rulesetName] = ruleset.playerCounts;
+	}
+	return res.send(result);
 });
 
 // TODO: Finish this endpoint, hook up web sockets to disperse role information.
