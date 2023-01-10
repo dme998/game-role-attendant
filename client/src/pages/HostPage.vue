@@ -87,6 +87,7 @@ export default defineComponent({
 
   data () {
     return {
+      rulesets: {},
       rulesetOptions: ["Secret Hitler"],
       model: "Secret Hitler",
     }
@@ -100,8 +101,9 @@ export default defineComponent({
     fetchRulesets() {
       api.get("/room/rulesets")
         .then((res) => {
-        this.rulesetOptions = res.data;
-        this.model = res.data[0];
+        this.rulesets = res.data;
+        this.rulesetOptions = Object.keys(this.rulesets);
+        this.model = this.rulesetOptions[0];
       })
         .catch((e) => {
           this.$q.notify({
