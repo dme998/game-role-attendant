@@ -105,6 +105,10 @@ router.put('/join', async (req, res) => {
 	return res.send({roomCode, userName, playerId})
 });
 
+router.get('/rulesets', async (req, res) => {
+	return res.send(Object.keys(RULESETS));
+});
+
 // TODO: Finish this endpoint, hook up web sockets to disperse role information.
 router.put('/start', async (req, res) => {
 	let player = await playerRepository.fetch(req.body.playerId);
