@@ -1,4 +1,5 @@
-import { choice } from './utils.js'
+import { choice } from './utils.js';
+export const RULESETS = {"Secret Hitler": SecretHitler};
 
 export class SecretHitler {
     constructor(players) {

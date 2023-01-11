@@ -107,7 +107,10 @@ export default {
       });
     },
     onSubmit() {
-      api
+		socketIo.emit("lobby-start");
+			
+		
+     /* api
         .put("/room/start", {
           playerId: localStorage.getItem("playerId"),
         })
@@ -128,7 +131,7 @@ export default {
             message: "Request failed.",
           });
           console.log(e);
-        });
+        });*/
     },
     onAbort() {
       socketIo.disconnect();

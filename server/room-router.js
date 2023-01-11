@@ -2,11 +2,10 @@ import { Router } from "express";
 import { roomRepository } from "./room.js";
 import { playerRepository } from "./player.js";
 import { makeRoomCode, normalizeUsername, validateRoomCode, getTTLDate } from "./utils.js";
-import { SecretHitler } from "./rulesets.js";
+import { RULESETS } from "./rulesets.js";
 
 export const router = Router()
 const MAX_TTL = 21600; // expiration time to live to be used by generated objects in seconds.
-const RULESETS = {"Secret Hitler": SecretHitler}
 
 router.put('/', async (req, res) => {  // room
     let room = roomRepository.createEntity();

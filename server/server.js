@@ -6,6 +6,7 @@ import { router as roomRouter } from "./room-router.js";
 import { roomRepository } from "./room.js";
 import { playerRepository } from "./player.js";
 import { playersOut } from "./utils.js";
+import { SecretHitler } from "./rulesets.js";
 
 let app = express();
 const server = http.createServer(app);
@@ -53,10 +54,27 @@ io.on("connect", async (socket) => {
     else {
         let room = await roomRepository.fetch(player.roomId)
         socket.join(room.roomName);
-        let lobbyData = await playerRepository.search().where('roomId').equals(room.entityId).sortBy('dateJoined', 'ASC').all();
+        let playersInLobby = await playerRepository.search().where('roomId').equals(room.entityId).sortBy('dateJoined', 'ASC').all();
 
-        io.to(room.roomName).emit("send-data", {players: playersOut(lobbyData), roomSize: room.playerCount});
+        io.to(room.roomName).emit("send-data", {players: playersOut(playersInLobby), roomSize: room.playerCount});
     }
+	
+	socket.on("lobby-start", async (socket) => {
+		//Player must be host to start game, check server side.
+		let player = await playerRepository.fetch(socket.playerID);
+		let room = await roomRepository.fetch(player.roomId);
+		let playersInLobby = await playerRepository.search().where('roomId').equals(room.entityId).sortBy('dateJoined', 'ASC').all();
+		if (!player.isHost) {
+			socket.next();
+		}
+	
+		//Player count must be at max capacity
+		if (room.playerCount === playersInLobby.length) {
+			
+		}
+		
+	});
+	
     socket.on("disconnect", async (reason) => {
         let player = await playerRepository.fetch(socket.playerId)
         let room = await roomRepository.fetch(player.roomId);
@@ -79,8 +97,8 @@ io.on("connect", async (socket) => {
             await playerRepository.remove(socket.playerId);
             socket.leave(room.roomName);
 
-            let lobbyData = await playerRepository.search().where('roomId').equals(room.entityId).sortBy('dateJoined', 'ASC').all();
-            io.to(room.roomName).emit("send-data", {players: playersOut(lobbyData), roomSize: room.playerCount});
+            let playersInLobby = await playerRepository.search().where('roomId').equals(room.entityId).sortBy('dateJoined', 'ASC').all();
+            io.to(room.roomName).emit("send-data", {players: playersOut(playersInLobby), roomSize: room.playerCount});
         }
     });
 });
