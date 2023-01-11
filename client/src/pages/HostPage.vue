@@ -21,9 +21,9 @@
 
         <q-select
           filled
-          v-model="model"
+          v-model="this.model"
           label="Ruleset"
-          :options="stringOptions"
+          :options="this.rulesetOptions"
           behavior="menu"
         />
 
@@ -37,8 +37,8 @@
             (val) =>
               (val !== null && val !== '') || 'Please select amount of players',
             (val) =>
-              (val >= minPlayer && val <= maxPlayer) ||
-              `Please select within ${minPlayer} ➡️ ${maxPlayer} players`,
+              (val >= this.rulesets[this.model].minCount && val <= this.rulesets[this.model].maxCount) ||
+              `Please select within ${this.rulesets[this.model].minCount} ➡️ ${this.rulesets[this.model].maxCount} players`,
           ]"
         />
 
@@ -62,9 +62,6 @@ import { defineComponent } from "vue";
 import { ref } from "vue";
 import { api } from "boot/axios";
 
-const stringOptions = ["Secret Hitler"];
-const minPlayer = 5;
-const maxPlayer = 10;
 
 export default defineComponent({
   name: "HostPage",
@@ -72,17 +69,10 @@ export default defineComponent({
   setup() {
     const name = ref(null);
     const playerNum = ref(null);
-    const options = ref(stringOptions);
-    const model = ref("Secret Hitler");
 
     return {
       name,
       playerNum,
-      model,
-      stringOptions,
-      options,
-      minPlayer,
-      maxPlayer,
 
       onReset() {
         name.value = null;
@@ -90,7 +80,37 @@ export default defineComponent({
       },
     };
   },
+
+  data () {
+    return {
+      rulesets: {},
+      rulesetOptions: ["Secret Hitler"],
+      model: "Secret Hitler",
+    }
+  },
+
+  mounted() {
+    this.fetchRulesets();
+  },
+
   methods: {
+    fetchRulesets() {
+      api.get("/room/rulesets")
+        .then((res) => {
+        this.rulesets = res.data;
+        this.rulesetOptions = Object.keys(this.rulesets);
+        this.model = this.rulesetOptions[0];
+      })
+        .catch((e) => {
+          this.$q.notify({
+            color: "negative",
+            textColor: "white",
+            icon: "report_problem",
+            message: "Request failed.",
+          });
+        })
+    },
+
     onSubmit(userName, ruleset, playerNum) {
       api
         .put("/room", {
@@ -110,13 +130,13 @@ export default defineComponent({
           });
         })
         .catch((e) => {
+          const error = e.response ? e.response.data.errorMessage : "Request Failed."
           this.$q.notify({
             color: "negative",
             textColor: "white",
             icon: "report_problem",
-            message: "Request failed.",
+            message: error,
           });
-          console.log(e);
         });
     },
   },

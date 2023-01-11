@@ -6,7 +6,7 @@ import { SecretHitler } from "./rulesets.js";
 
 export const router = Router()
 const MAX_TTL = 21600; // expiration time to live to be used by generated objects in seconds.
-const RULESETS = ["Secret Hitler", "Undefined Ruleset"];
+const RULESETS = {"Secret Hitler": SecretHitler}
 
 router.put('/', async (req, res) => {  // room
     let room = roomRepository.createEntity();
@@ -20,7 +20,7 @@ router.put('/', async (req, res) => {  // room
 	while (await roomRepository.search().where('roomName').equals(roomCode).first()) {
 		if (counter > 100) {
 			res.status(508);
-			return res.send("approaching infinite loop");
+			return res.send({errorMessage: "approaching infinite loop"});
 		}
 		else {
 			roomCode = makeRoomCode();
@@ -31,15 +31,27 @@ router.put('/', async (req, res) => {  // room
 	
 	/* check user input and match to ruleset
 	** if no user input exists, default to first index in ruleset */
-	for(let i = 0; i < RULESETS.length; i++) {
-		if (req.body.ruleset === RULESETS[i]) {
-			room.ruleset = req.body.ruleset ?? null;
-		}
-		else {
-			room.ruleset = RULESETS[0] ?? null;
-		}
+	if (RULESETS[req.body.ruleset]) {
+		room.ruleset = req.body.ruleset ?? null;
 	}
-	
+	else {
+		room.ruleset = Object.keys(RULESETS)[0] ?? null;
+	}
+
+	// Make sure player count is valid.
+	const ruleset = new RULESETS[room.ruleset];
+	const playerCount = parseInt(req.body.playerCount);
+	if (!playerCount) {
+		res.status(400);
+		return res.send({errorMessage: "Bad request."});
+	}
+	// TODO: Try removing playerCounts and accessing mincount and maxcount straight away.
+	if (playerCount < ruleset.playerCounts.minCount || playerCount > ruleset.playerCounts.maxCount) {
+		res.status(422);
+		return res.send({errorMessage: "Player count invalid."});
+	}
+
+	room.playerCount = playerCount ?? null;
 	room.dateCreated = new Date() ?? null;
 	room.dateEnd = getTTLDate(room.dateCreated, MAX_TTL) ?? null;
 	const roomId = await roomRepository.save(room);  //async
@@ -53,9 +65,6 @@ router.put('/', async (req, res) => {  // room
     const playerId = await playerRepository.save(player)
 	await playerRepository.expire(playerId, MAX_TTL)
 
-    // return res.send({roomId, playerId});  //debug
-
-	// const players = await playerRepository.search().where('roomId').equals(roomId).sortBy('dateJoined').all()
 	return res.send({roomCode, userName, playerId});
 
 });
@@ -66,19 +75,24 @@ router.put('/join', async (req, res) => {
 	const room = await roomRepository.search().where('roomName').equals(roomCode).first();
 	if (!room) {
 		res.status(404);
-		return res.send("Room not found!")
+		return res.send({errorMessage: "Room not found!"})
 	}
-	
-	/* Check if duplicate username exists and send error if so */
+
 	const userName = normalizeUsername(req.body.userName);
 	const playerQuery = await playerRepository.search().where('roomId').equals(room.entityId).all();
 	let existingPlayers = []
-	playerQuery.forEach((p) => {
-		existingPlayers.push(p.entityFields.userName._value.toLowerCase());
-	});
+	for (let p in playerQuery) {
+		existingPlayers.push(playerQuery[p].userName.toLowerCase());
+	}
+	// Check if room is full
+	if (existingPlayers.length === room.playerCount) {
+		res.status(409);
+		return res.send({errorMessage: "Room is full!"});
+	}
+	// Check if username is already taken
 	if (existingPlayers.includes(userName.toLowerCase())) {
 		res.status(409);
-		return res.send("Username is already taken!")
+		return res.send({errorMessage: "Username is already taken!"})
 	}
 
 	let player = playerRepository.createEntity();
@@ -90,6 +104,15 @@ router.put('/join', async (req, res) => {
 	await playerRepository.expire(playerId, MAX_TTL);
 
 	return res.send({roomCode, userName, playerId})
+});
+
+router.get('/rulesets', async (req, res) => {
+	let result = {}
+	for (let rulesetName in RULESETS) {
+		const ruleset = new RULESETS[rulesetName];
+		result[rulesetName] = ruleset.playerCounts;
+	}
+	return res.send(result);
 });
 
 // TODO: Finish this endpoint, hook up web sockets to disperse role information.

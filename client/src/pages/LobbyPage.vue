@@ -11,7 +11,7 @@
               <q-item-label></q-item-label>
             </q-item-section>
           </q-item>
-          <q-item-label header>Player List</q-item-label>
+          <q-item-label header>{{ `Player Count: ${this.players.length}/${this.roomSize}` }}</q-item-label>
 
           <q-separator spaced />
 
@@ -67,6 +67,7 @@ export default {
   data() {
     return {
       players: [],
+      roomSize: 10,
     };
   },
 
@@ -81,7 +82,8 @@ export default {
       socketIo.connect();
       socketIo.on("send-data", (lobbyData) => {
         console.log(lobbyData);
-        this.players = lobbyData;
+        this.players = lobbyData.players;
+        this.roomSize = lobbyData.roomSize;
       });
       socketIo.on("invalid-user", (message) => {
         this.$router.push("/");

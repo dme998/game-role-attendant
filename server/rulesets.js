@@ -5,9 +5,10 @@ export class SecretHitler {
         this.players = players;
         this.minPlayers = 5;
         this.maxPlayers = 10;
-        if (this.players.length < this.minPlayers || this.players.length > this.maxPlayers) {
-            throw Error("That boy ain't right....");
-        }
+    }
+
+    get playerCounts () {
+        return {minCount: this.minPlayers, maxCount: this.maxPlayers}
     }
 
     determineRoleCount(playerCount) {
@@ -85,7 +86,7 @@ export class SecretHitler {
         }
 		else {
 			playerRoles.push({playerId: players[0].entityId, RoleType: "Hitler", color: "maroon",
-							 message: `${players[0].userName}, your Secret Role is Hitler. Your fellow Fascists: ` })
+							 message: `${players[0].userName}, your Secret Role is Hitler.` })
 		}
 		
 		
