@@ -86,7 +86,7 @@ export class SecretHitler {
         }
 		else {
 			playerRoles.push({playerId: players[0].entityId, RoleType: "Hitler", color: "maroon",
-							 message: `${players[0].userName}, your Secret Role is Hitler. Your fellow Fascists: ` })
+							 message: `${players[0].userName}, your Secret Role is Hitler.` })
 		}
 		
 		
