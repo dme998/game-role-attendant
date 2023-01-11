@@ -6,7 +6,7 @@ import { router as roomRouter } from "./room-router.js";
 import { roomRepository } from "./room.js";
 import { playerRepository } from "./player.js";
 import { playersOut } from "./utils.js";
-import { SecretHitler } from "./rulesets.js";
+import { RULESETS } from "./rulesets.js";
 
 let app = express();
 const server = http.createServer(app);
@@ -53,7 +53,8 @@ io.on("connect", async (socket) => {
     }
     else {
         let room = await roomRepository.fetch(player.roomId)
-        socket.join(room.roomName);
+        socket.join(socket.playerId);
+		socket.join(room.roomName);
         let playersInLobby = await playerRepository.search().where('roomId').equals(room.entityId).sortBy('dateJoined', 'ASC').all();
 
         io.to(room.roomName).emit("send-data", {players: playersOut(playersInLobby), roomSize: room.playerCount});
@@ -70,7 +71,8 @@ io.on("connect", async (socket) => {
 	
 		//Player count must be at max capacity
 		if (room.playerCount === playersInLobby.length) {
-			
+			const playerRolesColorsMessages = await new RULESETS[room.ruleset](playersInLobby).setRolesForPlayers();
+			//TODO: make for loop, each iteration match player ID to socket player ID (socket.playerID.emit -- send data)
 		}
 		
 	});
