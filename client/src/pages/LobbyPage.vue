@@ -11,7 +11,9 @@
               <q-item-label></q-item-label>
             </q-item-section>
           </q-item>
-          <q-item-label header>{{ `Player Count: ${this.players.length}/${this.roomSize}` }}</q-item-label>
+          <q-item-label header>{{
+            `Player Count: ${this.players.length}/${this.roomSize}`
+          }}</q-item-label>
 
           <q-separator spaced />
 
@@ -121,8 +123,8 @@ export default {
       });
     },
     onSubmit() {
-		socketIo.emit("lobby-start");
-     /* api
+      socketIo.emit("lobby-start");
+      /* api
         .put("/room/start", {
           playerId: localStorage.getItem("playerId"),
         })

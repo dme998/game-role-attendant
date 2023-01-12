@@ -47,15 +47,12 @@
 
 <script>
 import { ref } from "vue";
-import { useQuasar } from "quasar";
 import { api } from "boot/axios";
 
 export default {
   name: "JoinPage",
 
   setup() {
-    const $q = useQuasar();
-
     const name = ref(null);
     const room = ref(null);
 
@@ -88,7 +85,9 @@ export default {
           });
         })
         .catch((e) => {
-          const error = e.response ? e.response.data.errorMessage : "Request Failed."
+          const error = e.response
+            ? e.response.data.errorMessage
+            : "Request Failed.";
           this.$q.notify({
             color: "negative",
             textColor: "white",
