@@ -85,6 +85,20 @@ export default {
         this.players = lobbyData.players;
         this.roomSize = lobbyData.roomSize;
       });
+      socketIo.on("role-details", (data) => {
+        localStorage.setItem("role", data.roleType);
+        localStorage.setItem("color", data.color);
+        localStorage.setItem("roleMessage", data.message);
+        this.$router.push("/result")
+      });
+      socketIo.on("false-start", (message) => {
+        this.$q.notify({
+          color: "negative",
+          textColor: "white",
+          icon: "report_problem",
+          message: message,
+        });
+      });
       socketIo.on("invalid-user", (message) => {
         this.$router.push("/");
         this.$q.notify({
@@ -108,8 +122,6 @@ export default {
     },
     onSubmit() {
 		socketIo.emit("lobby-start");
-			
-		
      /* api
         .put("/room/start", {
           playerId: localStorage.getItem("playerId"),
