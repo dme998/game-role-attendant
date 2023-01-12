@@ -60,20 +60,28 @@ io.on("connect", async (socket) => {
         io.to(room.roomName).emit("send-data", {players: playersOut(playersInLobby), roomSize: room.playerCount});
     }
 	
-	socket.on("lobby-start", async (socket) => {
+	socket.on("lobby-start", async (next) => {
 		//Player must be host to start game, check server side.
-		let player = await playerRepository.fetch(socket.playerID);
+		let player = await playerRepository.fetch(socket.playerId);
 		let room = await roomRepository.fetch(player.roomId);
 		let playersInLobby = await playerRepository.search().where('roomId').equals(room.entityId).sortBy('dateJoined', 'ASC').all();
 		if (!player.isHost) {
-			socket.next();
+			// Bail and do nothing.
 		}
-	
 		//Player count must be at max capacity
-		if (room.playerCount === playersInLobby.length) {
+		else if (room.playerCount === playersInLobby.length) {
 			const playerRolesColorsMessages = await new RULESETS[room.ruleset](playersInLobby).setRolesForPlayers();
-			//TODO: make for loop, each iteration match player ID to socket player ID (socket.playerID.emit -- send data)
+			// Send each player their specific role information.
+            for (let p in playerRolesColorsMessages) {
+                io.to(playerRolesColorsMessages[p].playerId).emit("role-details", {
+                    roleType: playerRolesColorsMessages[p].RoleType,
+                    color: playerRolesColorsMessages[p].color,
+                    message: playerRolesColorsMessages[p].message});
+            }
 		}
+        else {
+            io.to(socket.playerId).emit("false-start", "The lobby does not have enough players to start!");
+        }
 		
 	});
 	
