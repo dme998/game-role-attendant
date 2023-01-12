@@ -59,7 +59,6 @@
 
 <script>
 import { socketIo } from "boot/socket.io";
-import { api } from "boot/axios";
 
 export default {
   name: "LobbyPage",
@@ -89,7 +88,8 @@ export default {
         localStorage.setItem("role", data.roleType);
         localStorage.setItem("color", data.color);
         localStorage.setItem("roleMessage", data.message);
-        this.$router.push("/result")
+        this.$router.push("/result");
+        socketIo.disconnect();
       });
       socketIo.on("false-start", (message) => {
         this.$q.notify({
