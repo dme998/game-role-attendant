@@ -129,23 +129,3 @@ router.get("/rulesets", async (req, res) => {
   }
   return res.send(result);
 });
-
-// TODO: Finish this endpoint, hook up web sockets to disperse role information.
-router.put("/start", async (req, res) => {
-  let player = await playerRepository.fetch(req.body.playerId);
-  let players = await playerRepository
-    .search()
-    .where("roomId")
-    .equals(player.roomId)
-    .all();
-  let data = await new SecretHitler(players).setRolesForPlayers();
-  console.log(data);
-  res.status(200);
-  return res.send("");
-});
-
-router.get("/player/:id", async (req, res) => {
-  let player = await playerRepository.fetch(req.params.id);
-
-  return res.send(player);
-});

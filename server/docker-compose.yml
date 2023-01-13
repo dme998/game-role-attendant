@@ -6,7 +6,7 @@ services:
     build:
       context: .
       args:
-        buildversion: 0.2
+        buildversion: 0.5
 
     ports:
       - "3000:3000"

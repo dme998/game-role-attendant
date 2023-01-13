@@ -34,19 +34,11 @@ app.use(
 );
 app.use("/room", roomRouter);
 
-app.get("/", (req, res) => {
-  res.send({
-    name: process.env.npm_package_name,
-    version: process.env.npm_package_version,
-  });
-});
-
 server.listen(3000, () => {
   console.log("listening on *:3000");
 });
 
 // All web socket server logic.
-// TODO: Find a way to let players refresh without being disconnected and kicked from their lobby.
 io.on("connect", async (socket) => {
   console.log(socket.playerId);
   let player = await playerRepository.fetch(socket.playerId);
@@ -69,7 +61,7 @@ io.on("connect", async (socket) => {
     });
   }
 
-  socket.on("lobby-start", async (next) => {
+  socket.on("lobby-start", async () => {
     //Player must be host to start game, check server side.
     let player = await playerRepository.fetch(socket.playerId);
     let room = await roomRepository.fetch(player.roomId);
@@ -103,7 +95,7 @@ io.on("connect", async (socket) => {
     }
   });
 
-  socket.on("disconnect", async (reason) => {
+  socket.on("disconnect", async () => {
     let player = await playerRepository.fetch(socket.playerId);
     let room = await roomRepository.fetch(player.roomId);
     if (!player.roomId) {

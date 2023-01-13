@@ -44,12 +44,6 @@ export function choice(arr) {
   return Math.floor(Math.random() * arr.length);
 }
 
-export function removeItem(arr, value) {
-  return arr.filter(function (element) {
-    return element !== value;
-  });
-}
-
 // This function removes internal data that does not need to be sent to the client.
 export function playersOut(playerObjects) {
   let result = [];
