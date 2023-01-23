@@ -142,28 +142,6 @@ export default {
     },
     onSubmit() {
       socketIo.emit("lobby-start");
-      /* api
-        .put("/room/start", {
-          playerId: localStorage.getItem("playerId"),
-        })
-        .then((res) => {
-          console.log(res);
-          this.$q.notify({
-            color: "positive",
-            textColor: "white",
-            icon: "cloud_done",
-            message: `Game is starting....`,
-          });
-        })
-        .catch((e) => {
-          this.$q.notify({
-            color: "negative",
-            textColor: "white",
-            icon: "report_problem",
-            message: "Request failed.",
-          });
-          console.log(e);
-        });*/
     },
     onAbort() {
       socketIo.disconnect();
