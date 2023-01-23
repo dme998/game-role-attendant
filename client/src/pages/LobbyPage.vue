@@ -45,7 +45,19 @@
           </ul>
 
           <div style="text-align: center; padding-top: 3px">
-            <q-btn label="Submit" type="submit" color="primary"></q-btn>
+            <q-btn
+              v-if="user === players[0].userName && players.length === roomSize"
+              label="Start"
+              type="submit"
+              color="primary"
+            ></q-btn>
+            <q-btn
+              v-if="user === players[0].userName && players.length !== roomSize"
+              label="Start"
+              type="submit"
+              color="primary"
+              disable="disable"
+            ></q-btn>
             <q-btn
               @click="onAbort"
               label="Leave"
@@ -62,12 +74,18 @@
 <script>
 import { socketIo } from "boot/socket.io";
 
+const user = localStorage.getItem("userName");
+
 export default {
   name: "LobbyPage",
 
+  setup() {
+    return { user };
+  },
+
   data() {
     return {
-      players: [],
+      players: [{ userName: "user", isHost: true }],
       roomSize: 10,
     };
   },
