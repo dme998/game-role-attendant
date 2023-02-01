@@ -2,6 +2,14 @@
 
 Directions listed here assume you are in the server folder directory.
 
+### Configure environment variables
+
+```bash
+cp .env_example .env
+# Make changes if needed
+nano .env
+```
+
 ### Half Docker
 
 ```bash
@@ -31,32 +39,22 @@ docker-compose down
 ```bash
 # Create a room passing details you would from the front end.
 curl -X PUT -H "Content-Type: application/json" \
--d "{\"userName\": \"dme_998\", \"ruleset\": \"Secret Hitler\", \"isHost\": true}" \
+-d "{\"userName\": \"dme_998\", \"ruleset\": \"Secret Hitler\", \"playerCount\": 5}" \
 http://localhost:3000/room -s
-# ^ This will return the RoomId and PlayerId to use in the following cURLs.
-
-# Fetch player info:
-curl -X GET http://localhost:3000/room/player/01G90F041EDJ6BEBXPTQY8TVX4 -s
-
-# Fetch room info:
-curl -X GET http://localhost:3000/room/01G90F041DGV6SA4JMPXA8FJZF -s
 ```
 
 - PowerShell:
 
 ```powershell
 # Create a room passing details you would from the front end.
-Invoke-WebRequest -URI http://localhost:3000/room -Method PUT -Body '{"userName": "dme_998", "ruleset": "Secret Hitler", "isHost": true}' -ContentType "application/json"
-# ^ This will return the RoomId and PlayerId to use in the following cURLs.
-
-# Fetch player info:
-Invoke-WebRequest -URI http://localhost:3000/room/player/01G90FH9Y93BJ95K84XB2KWN27 -Method GET
-
-# Fetch room info:
-Invoke-WebRequest -URI http://localhost:3000/room/01G90FH9Y8MQE17WGCX1WGKDYW -Method GET
+Invoke-RestMethod -URI http://localhost:3000/room -Method PUT -Body '{"userName": "dme_998", "ruleset": "Secret Hitler", "playerCount": 5}' -ContentType "application/json"
+# OR
+Invoke-WebRequest -URI http://localhost:3000/room -Method PUT -Body '{"userName": "dme_998", "ruleset": "Secret Hitler", "playerCount": 5}' -ContentType "application/json"
 ```
 
 ### Join Room
+
+- bash:
 
 ```bash
 curl -X PUT -H "Content-Type: application/json" \
@@ -64,8 +62,28 @@ curl -X PUT -H "Content-Type: application/json" \
 http://localhost:3000/room/join -s
 ```
 
+- PowerShell:
+
 ```powershell
+Invoke-RestMethod -URI http://localhost:3000/room/join -Method PUT -Body '{"userName": "tut0", "roomCode": "A17G"}' -ContentType "application/json"
+# OR
 Invoke-WebRequest -URI http://localhost:3000/room/join -Method PUT -Body '{"userName": "tut0", "roomCode": "A17G"}' -ContentType "application/json"
+```
+
+### Get Rulesets
+
+- bash:
+
+```bash
+curl -X GET http://localhost:3000/room/rulesets
+```
+
+- PowerShell
+
+```powershell
+Invoke-RestMethod -URI http://localhost:3000/room/rulesets -Method GET
+# OR
+Invoke-WebRequest -URI http://localhost:3000/room/rulesets -Method GET
 ```
 
 ## Teardown
