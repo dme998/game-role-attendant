@@ -11,7 +11,9 @@
               <q-item-label></q-item-label>
             </q-item-section>
           </q-item>
-          <q-item-label header>{{ `Player Count: ${this.players.length}/${this.roomSize}` }}</q-item-label>
+          <q-item-label header>{{
+            `Player Count: ${this.players.length}/${this.roomSize}`
+          }}</q-item-label>
 
           <q-separator spaced />
 
@@ -43,7 +45,19 @@
           </ul>
 
           <div style="text-align: center; padding-top: 3px">
-            <q-btn label="Submit" type="submit" color="primary"></q-btn>
+            <q-btn
+              v-if="user === players[0].userName && players.length === roomSize"
+              label="Start"
+              type="submit"
+              color="primary"
+            ></q-btn>
+            <q-btn
+              v-if="user === players[0].userName && players.length !== roomSize"
+              label="Start"
+              type="submit"
+              color="primary"
+              disable="disable"
+            ></q-btn>
             <q-btn
               @click="onAbort"
               label="Leave"
@@ -59,14 +73,19 @@
 
 <script>
 import { socketIo } from "boot/socket.io";
-import { api } from "boot/axios";
+
+const user = localStorage.getItem("userName");
 
 export default {
   name: "LobbyPage",
 
+  setup() {
+    return { user };
+  },
+
   data() {
     return {
-      players: [],
+      players: [{ userName: "user", isHost: true }],
       roomSize: 10,
     };
   },
@@ -84,6 +103,21 @@ export default {
         console.log(lobbyData);
         this.players = lobbyData.players;
         this.roomSize = lobbyData.roomSize;
+      });
+      socketIo.on("role-details", (data) => {
+        localStorage.setItem("role", data.roleType);
+        localStorage.setItem("color", data.color);
+        localStorage.setItem("roleMessage", data.message);
+        this.$router.push("/result");
+        socketIo.disconnect();
+      });
+      socketIo.on("false-start", (message) => {
+        this.$q.notify({
+          color: "negative",
+          textColor: "white",
+          icon: "report_problem",
+          message: message,
+        });
       });
       socketIo.on("invalid-user", (message) => {
         this.$router.push("/");
@@ -107,28 +141,7 @@ export default {
       });
     },
     onSubmit() {
-      api
-        .put("/room/start", {
-          playerId: localStorage.getItem("playerId"),
-        })
-        .then((res) => {
-          console.log(res);
-          this.$q.notify({
-            color: "positive",
-            textColor: "white",
-            icon: "cloud_done",
-            message: `Game is starting....`,
-          });
-        })
-        .catch((e) => {
-          this.$q.notify({
-            color: "negative",
-            textColor: "white",
-            icon: "report_problem",
-            message: "Request failed.",
-          });
-          console.log(e);
-        });
+      socketIo.emit("lobby-start");
     },
     onAbort() {
       socketIo.disconnect();

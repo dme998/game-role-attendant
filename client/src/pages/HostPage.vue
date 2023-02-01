@@ -37,8 +37,11 @@
             (val) =>
               (val !== null && val !== '') || 'Please select amount of players',
             (val) =>
-              (val >= this.rulesets[this.model].minCount && val <= this.rulesets[this.model].maxCount) ||
-              `Please select within ${this.rulesets[this.model].minCount} ➡️ ${this.rulesets[this.model].maxCount} players`,
+              (val >= this.rulesets[this.model].minCount &&
+                val <= this.rulesets[this.model].maxCount) ||
+              `Please select within ${this.rulesets[this.model].minCount} ➡️ ${
+                this.rulesets[this.model].maxCount
+              } players`,
           ]"
         />
 
@@ -62,7 +65,6 @@ import { defineComponent } from "vue";
 import { ref } from "vue";
 import { api } from "boot/axios";
 
-
 export default defineComponent({
   name: "HostPage",
 
@@ -81,12 +83,12 @@ export default defineComponent({
     };
   },
 
-  data () {
+  data() {
     return {
       rulesets: {},
       rulesetOptions: ["Secret Hitler"],
       model: "Secret Hitler",
-    }
+    };
   },
 
   mounted() {
@@ -95,20 +97,21 @@ export default defineComponent({
 
   methods: {
     fetchRulesets() {
-      api.get("/room/rulesets")
+      api
+        .get("/room/rulesets")
         .then((res) => {
-        this.rulesets = res.data;
-        this.rulesetOptions = Object.keys(this.rulesets);
-        this.model = this.rulesetOptions[0];
-      })
-        .catch((e) => {
+          this.rulesets = res.data;
+          this.rulesetOptions = Object.keys(this.rulesets);
+          this.model = this.rulesetOptions[0];
+        })
+        .catch(() => {
           this.$q.notify({
             color: "negative",
             textColor: "white",
             icon: "report_problem",
             message: "Request failed.",
           });
-        })
+        });
     },
 
     onSubmit(userName, ruleset, playerNum) {
@@ -130,7 +133,9 @@ export default defineComponent({
           });
         })
         .catch((e) => {
-          const error = e.response ? e.response.data.errorMessage : "Request Failed."
+          const error = e.response
+            ? e.response.data.errorMessage
+            : "Request Failed.";
           this.$q.notify({
             color: "negative",
             textColor: "white",
