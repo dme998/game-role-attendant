@@ -3,10 +3,10 @@ import { roomRepository } from "./room.js";
 import { playerRepository } from "./player.js";
 import { RULESETS } from "./rulesets.js";
 import {
-	makeRoomCode,
-	normalizeUsername,
-	validateRoomCode,
-	getTTLDate,
+  makeRoomCode,
+  normalizeUsername,
+  validateRoomCode,
+  getTTLDate,
 } from "./utils.js";
 
 export const router = Router();
