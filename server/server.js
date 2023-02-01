@@ -2,18 +2,39 @@ import express from "express";
 import http from "http";
 import { Server } from "socket.io";
 import cors from "cors";
+import * as dotenv from "dotenv";
 import { router as roomRouter } from "./room-router.js";
 import { roomRepository } from "./room.js";
 import { playerRepository } from "./player.js";
 import { playersOut } from "./utils.js";
 import { RULESETS } from "./rulesets.js";
 
+dotenv.config();
+
 let app = express();
+app.disable("x-powered-by");
+app.use((req, res, next) => {
+  res.header("X-Content-Type-Options", "nosniff");
+  res.header("X-Frame-Options", "deny");
+  res.header("Content-Security-Policy", "default-src 'none';");
+
+  next();
+});
+app.use(express.json());
+app.use(
+  cors({
+    origin: process.env.ORIGIN,
+  })
+);
+app.use("/room", roomRouter);
+
 const server = http.createServer(app);
+server.listen(3000, () => {
+  console.log("listening on *:3000");
+});
 const io = new Server(server, {
-  // TODO: Lock this down later.
   cors: {
-    origin: "*",
+    origin: process.env.ORIGIN,
   },
 });
 io.use((socket, next) => {
@@ -23,19 +44,6 @@ io.use((socket, next) => {
   }
   socket.playerId = playerId;
   next();
-});
-
-app.use(express.json());
-// TODO: Lock this down later.
-app.use(
-  cors({
-    origin: "*",
-  })
-);
-app.use("/room", roomRouter);
-
-server.listen(3000, () => {
-  console.log("listening on *:3000");
 });
 
 // All web socket server logic.
