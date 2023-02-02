@@ -9,7 +9,7 @@ RUN src/scripts/dockerbuild.sh
 FROM nginxinc/nginx-unprivileged:alpine
 
 COPY --from=builder /src/dist/pwa /app
-COPY src/config/default.conf /etc/nginx/conf.d/
+COPY config/default.conf /etc/nginx/conf.d/
 
 USER root
 
