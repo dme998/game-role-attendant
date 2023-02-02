@@ -29,8 +29,8 @@ app.use(
 app.use("/room", roomRouter);
 
 const server = http.createServer(app);
-server.listen(3000, () => {
-  console.log("listening on *:3000");
+server.listen(process.env.PORT, () => {
+  console.log(`listening on *:${process.env.PORT}`);
 });
 const io = new Server(server, {
   cors: {
