@@ -2,10 +2,11 @@
   "name": "game-role-attendent-server",
   "version": "0.1",
   "description": "This webpage is intended to assist with role-based and hidden identity games. Each player can connect to the host and receive personalized role information for the game.",
-  "main": "server.js",
+  "main": "src/server.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/server.js"
   },
   "keywords": [],
   "author": "dme_998, Tut-k0",
