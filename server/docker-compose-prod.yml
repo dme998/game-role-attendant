@@ -13,8 +13,6 @@ services:
       - "3000:3000"
     networks:
       - game-role-attendant-network
-    volumes:
-      - ./logs:/var/www/logs
     depends_on:
       - redis
     env_file:

@@ -4,7 +4,6 @@ LABEL author="tutk0"
 
 ARG buildversion
 
-ENV NODE_ENV=development
 ENV PORT=3000
 ENV BUILD=$buildversion
 ENV REDIS_URL=redis://redis:6379
