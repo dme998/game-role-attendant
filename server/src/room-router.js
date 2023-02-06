@@ -50,11 +50,7 @@ router.put("/", async (req, res) => {
     res.status(400);
     return res.send({ errorMessage: "Bad request." });
   }
-  // TODO: Try removing playerCounts and accessing mincount and maxcount straight away.
-  if (
-    playerCount < ruleset.playerCounts.minCount ||
-    playerCount > ruleset.playerCounts.maxCount
-  ) {
+  if (playerCount < ruleset.minPlayers || playerCount > ruleset.maxPlayers) {
     res.status(422);
     return res.send({ errorMessage: "Player count invalid." });
   }

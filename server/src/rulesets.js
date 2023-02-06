@@ -8,7 +8,7 @@ export class SecretHitler {
   }
 
   get playerCounts() {
-    return { minCount: this.minPlayers, maxCount: this.maxPlayers };
+    return { minPlayers: this.minPlayers, maxPlayers: this.maxPlayers };
   }
 
   determineRoleCount(playerCount) {
