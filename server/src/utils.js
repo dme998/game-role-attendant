@@ -1,14 +1,16 @@
 const ROOM_CODE_CHAR_SET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 const ROOM_CODE_LENGTH = 4;
 
+export function choice(arr) {
+  return Math.floor(Math.random() * arr.length);
+}
+
 export function makeRoomCode() {
   let result = "";
-  const charsLength = ROOM_CODE_CHAR_SET.length;
 
   for (let i = 0; i < ROOM_CODE_LENGTH; i++) {
-    result += ROOM_CODE_CHAR_SET.charAt(
-      Math.floor(Math.random() * charsLength)
-    );
+    const char = choice(ROOM_CODE_CHAR_SET);
+    result += ROOM_CODE_CHAR_SET[char];
   }
   return result;
 }
@@ -38,10 +40,6 @@ export function getTTLDate(currentDate, ttlInSeconds) {
   const currentTime = currentDate.getTime();
   const addedTime = currentTime + ttlInSeconds * 1000; //1000 means ms conversion
   return new Date(addedTime);
-}
-
-export function choice(arr) {
-  return Math.floor(Math.random() * arr.length);
 }
 
 // This function removes internal data that does not need to be sent to the client.
