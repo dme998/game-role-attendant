@@ -74,17 +74,12 @@
 <script>
 import { socketIo } from "boot/socket.io";
 
-const user = localStorage.getItem("userName");
-
 export default {
   name: "LobbyPage",
 
-  setup() {
-    return { user };
-  },
-
   data() {
     return {
+      user: localStorage.getItem("userName"),
       players: [{ userName: "user", isHost: true }],
       roomSize: 10,
     };
