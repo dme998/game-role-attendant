@@ -23,8 +23,11 @@ npm start
 ### Full Docker w/ Compose
 
 ```bash
-# Start containers detached
+# Start containers detached for development
 docker-compose up -d
+# OR
+# Start containers detached for prod
+docker-compose -f docker-compose-prod.yml up -d
 
 # Stop containers
 docker-compose down
