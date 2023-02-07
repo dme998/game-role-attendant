@@ -19,7 +19,6 @@ export function startSocketServer(app) {
     next();
   });
   io.on("connect", async (socket) => {
-    console.log(socket.playerId);
     let player = await playerRepository.fetch(socket.playerId);
     if (!player.roomId) {
       socket.emit("invalid-user", "Please create or join a valid game.");

@@ -100,7 +100,6 @@ export default {
       socketIo.auth = { playerId };
       socketIo.connect();
       socketIo.on("send-data", (lobbyData) => {
-        console.log(lobbyData);
         this.players = lobbyData.players;
         this.roomSize = lobbyData.roomSize;
       });
