@@ -3,10 +3,10 @@ import { roomRepository } from "./room.js";
 import { playerRepository } from "./player.js";
 import { RULESETS } from "./rulesets.js";
 import {
-	makeRoomCode,
-	normalizeUsername,
-	validateRoomCode,
-	getTTLDate,
+  makeRoomCode,
+  normalizeUsername,
+  validateRoomCode,
+  getTTLDate,
 } from "./utils.js";
 
 export const router = Router();
@@ -50,11 +50,7 @@ router.put("/", async (req, res) => {
     res.status(400);
     return res.send({ errorMessage: "Bad request." });
   }
-  // TODO: Try removing playerCounts and accessing mincount and maxcount straight away.
-  if (
-    playerCount < ruleset.playerCounts.minCount ||
-    playerCount > ruleset.playerCounts.maxCount
-  ) {
+  if (playerCount < ruleset.minPlayers || playerCount > ruleset.maxPlayers) {
     res.status(422);
     return res.send({ errorMessage: "Player count invalid." });
   }

@@ -37,10 +37,10 @@
             (val) =>
               (val !== null && val !== '') || 'Please select amount of players',
             (val) =>
-              (val >= this.rulesets[this.model].minCount &&
-                val <= this.rulesets[this.model].maxCount) ||
-              `Please select within ${this.rulesets[this.model].minCount} ➡️ ${
-                this.rulesets[this.model].maxCount
+              (val >= this.rulesets[this.model].minPlayers &&
+                val <= this.rulesets[this.model].maxPlayers) ||
+              `Please select within ${this.rulesets[this.model].minPlayers} ➡️ ${
+                this.rulesets[this.model].maxPlayers
               } players`,
           ]"
         />

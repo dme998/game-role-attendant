@@ -1,4 +1,4 @@
-import { choice } from "./utils.js";
+import { choice } from "../utils.js";
 
 export class SecretHitler {
   constructor(players) {
@@ -8,7 +8,7 @@ export class SecretHitler {
   }
 
   get playerCounts() {
-    return { minCount: this.minPlayers, maxCount: this.maxPlayers };
+    return { minPlayers: this.minPlayers, maxPlayers: this.maxPlayers };
   }
 
   determineRoleCount(playerCount) {
@@ -165,5 +165,3 @@ export class SecretHitler {
     return playerRoles;
   }
 }
-
-export const RULESETS = { "Secret Hitler": SecretHitler };

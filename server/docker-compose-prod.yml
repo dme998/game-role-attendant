@@ -3,6 +3,7 @@ services:
   node:
     container_name: game-role-attendant-app
     image: tutk0/game-role-attendant:latest
+    restart: unless-stopped
     build:
       context: .
       args:
@@ -20,10 +21,9 @@ services:
   redis:
     container_name: redis-db
     image: redislabs/redismod:latest
+    restart: unless-stopped
     networks:
       - game-role-attendant-network
-    ports:
-      - "6379:6379"
     healthcheck:
       test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
       interval: 5s

@@ -10,10 +10,18 @@ yarn
 npm install
 ```
 
+### Configure environment variables
+
+```bash
+cp .env_example .env
+# Modify the variables if needed.
+nano .env
+```
+
 ### Start the app in development mode (hot-code reloading, error reporting, etc.)
 
 ```bash
-quasar dev
+yarn quasar dev
 ```
 
 ### Lint the files
@@ -38,6 +46,11 @@ npm run format
 quasar build
 ```
 
-### Customize the configuration
+### Build and run the app containerized with Nginx as the web server
 
-See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
+You may want to update the nginx configuration file at src/config/default.conf first.
+
+```bash
+docker build -t game-role-attendent-client .
+docker run -p 9000:80 -d game-role-attendent-client
+```
